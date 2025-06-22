@@ -115,7 +115,7 @@
             height: 80px;
             border-radius: 50%; /* Hacerlo circular */
             background-color: #222; /* Color oscuro del vinilo */
-            border: 5px solid var(--color-soft-accent); /* Borde dorado para simular el anillo */
+            border: 3px solid var(--color-soft-accent); /* Borde dorado para simular el anillo */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,9 +125,14 @@
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(0,0,0,0.5); /* Sombra más pronunciada */
             z-index: 50; /* Asegurarse de que esté encima de otros elementos */
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            overflow: hidden; /* Asegurar que las notas no se salgan del borde del botón */
+            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease; /* Añadir transición para la opacidad */
+            opacity: 0; /* Ocultar por defecto */
+            pointer-events: none; /* No interactuable cuando está oculto */
             transform-origin: center center; /* Para la rotación */
+        }
+        #audio-toggle-btn.visible {
+            opacity: 1; /* Hacer visible */
+            pointer-events: auto; /* Hacer interactuable */
         }
 
         /* Círculo central que simula la etiqueta del disco */
@@ -218,6 +223,218 @@
             opacity: 0;
             pointer-events: none; /* Deshabilitar clics cuando está oculto */
         }
+
+        /* --- Estilos del Menú Hamburguesa --- */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+            backdrop-filter: blur(5px);
+            z-index: 60; /* Mayor que el header */
+            display: none; /* Oculto por defecto */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px; /* Fuera de la pantalla por la derecha */
+            width: 280px; /* Ancho del menú */
+            height: 100%;
+            background-color: var(--color-primary-bg); /* Fondo del menú */
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 70; /* Mayor que el overlay */
+            transition: right 0.3s ease-in-out; /* Transición para deslizar */
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        #mobile-menu.open {
+            right: 0; /* Deslizar a la pantalla */
+        }
+        #mobile-menu-overlay.active {
+            display: block; /* Mostrar el overlay */
+            opacity: 1;
+        }
+
+        #mobile-menu .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2.5rem; /* Tamaño del icono de cierre */
+            color: var(--color-text-dark);
+            cursor: pointer;
+            z-index: 10; /* Asegurarse de que esté clickeable */
+        }
+
+        #mobile-menu nav a {
+            display: block;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            color: var(--color-text-dark);
+            text-align: left;
+            border-bottom: 1px solid var(--color-secondary-bg);
+            transition: background-color 0.2s ease;
+        }
+
+        #mobile-menu nav a:last-child {
+            border-bottom: none;
+        }
+
+        #mobile-menu nav a:hover {
+            background-color: var(--color-secondary-bg);
+            color: var(--color-accent);
+        }
+
+        /* Responsive para la sección Nuestra Historia (Timeline) */
+        @media (max-width: 767px) { /* Para pantallas pequeñas (móviles) */
+            #nuestra-historia .relative {
+                padding-left: 30px; /* Espacio para la línea de tiempo más a la izquierda */
+            }
+            #nuestra-historia .relative > .absolute { /* La línea central en móviles */
+                left: 0;
+                width: 4px; /* Hacer la línea más gruesa para que se note */
+                background-color: var(--color-soft-accent); /* Color de la línea */
+                display: block !important; /* Mostrar siempre en móviles */
+                transform: none; /* Eliminar transformaciones previas */
+            }
+            #nuestra-historia .grid-cols-1 > .relative {
+                text-align: left; /* Asegurar alineación a la izquierda */
+            }
+            #nuestra-historia .grid-cols-1 > .relative > div:not(.absolute) { /* Los cuadros de contenido */
+                margin-left: 0; /* No margen para el contenido */
+                border-left: 4px solid var(--color-accent); /* Borde izquierdo para simular timeline */
+                border-top: none; /* Eliminar el borde superior si lo tenía */
+                padding-left: 15px; /* Espacio entre el borde y el contenido */
+            }
+            #nuestra-historia .grid-cols-1 > .relative .absolute.w-4 { /* Los puntos de la línea de tiempo */
+                left: -20px; /* Posicionar el punto en el inicio de la línea de tiempo */
+                top: 20px; /* Ajustar posición vertical */
+                transform: none; /* Eliminar transformaciones previas */
+            }
+        }
+
+        /* Responsive para la sección Itinerario */
+        @media (max-width: 767px) { /* Para pantallas pequeñas (móviles) */
+            #itinerario .relative {
+                padding-left: 30px; /* Espacio para la línea de tiempo principal */
+                position: relative; /* Asegurar que el padding y la línea se respeten */
+            }
+            /* Línea principal vertical para el itinerario en móvil */
+            #itinerario .relative > .absolute.bg-stone-300 { /* Targeting the main timeline line */
+                left: 0; /* Alineada al borde del padding */
+                width: 4px;
+                background-color: var(--color-soft-accent);
+                display: block !important;
+                transform: none;
+            }
+            /* Contenedor flex para cada evento */
+            #itinerario .grid-cols-1 > div { /* This is the `relative` div that contains dot and card */
+                display: flex;
+                align-items: flex-start;
+                position: relative; /* For positioning the dot relative to this */
+                margin-left: 0;
+                padding-left: 0;
+            }
+            /* The actual content card (bg-white) */
+            #itinerario .grid-cols-1 > div > div.bg-white {
+                width: 100%;
+                margin-left: 15px; /* Space between the dot/line and the card */
+                border-left: 4px solid var(--color-accent); /* Card border for timeline */
+                border-top: none !important; /* Ensure no top border */
+                border-right: none;
+                border-bottom: none;
+                padding-left: 1rem;
+                padding-right: 0;
+                text-align: left;
+            }
+            /* The dot itself for mobile */
+            #itinerario .grid-cols-1 > div .itinerary-dot {
+                left: -20px; /* Relative to its event's relative container */
+                top: 20px; /* Align vertically with the start of the card's text/title */
+                transform: none;
+                display: block !important;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (min-width: 768px) { /* Para pantallas grandes (desktop) */
+            /* Ensure the main timeline is centered */
+            #itinerario .relative > .absolute.bg-stone-300 {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Styles for the event cards for alternating left/right layout */
+            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 1) .itinerary-card { /* Left column cards (1st, 5th, etc. event divs) */
+                border-left: none;
+                border-right: 4px solid var(--color-accent); /* Right border for left column card */
+                text-align: right;
+                padding-left: 0;
+                padding-right: 1rem;
+            }
+            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 3) .itinerary-card { /* Right column cards (3rd, 7th, etc. event divs) */
+                border-right: none;
+                border-left: 4px solid var(--color-accent); /* Left border for right column card */
+                text-align: left;
+                padding-right: 0;
+                padding-left: 1rem;
+            }
+
+            /* Positioning for dots within left column (1st, 5th event) */
+            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 1) .itinerary-dot {
+                left: auto; /* Reset mobile left */
+                right: -24px; /* Position to the right of the card, next to the central line */
+                top: 50%; /* Vertically center */
+                transform: translateY(-50%); /* Adjust for its own height */
+            }
+
+            /* Positioning for dots within right column (3rd, 7th event) */
+            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 3) .itinerary-dot {
+                left: -24px; /* Position to the left of the card, next to the central line */
+                right: auto; /* Reset right */
+                top: 50%; /* Vertically center */
+                transform: translateY(-50%); /* Adjust for its own height */
+            }
+        }
+
+        /* Estilos específicos para el modal de Dress Code */
+        #dressCodeModal .dress-code-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Min-width un poco menor para pantallas muy pequeñas */
+            gap: 1rem;
+            padding: 1rem;
+            max-width: 800px; /* Ancho máximo para escritorio */
+            width: 90vw; /* Ancho basado en el viewport para responsividad */
+            background-color: white;
+            border-radius: 0.75rem;
+            margin: 0 auto; /* Centrar horizontalmente */
+            box-sizing: border-box; /* Asegurar que padding y border estén dentro del ancho/alto */
+            overflow-y: auto; /* Permitir scroll si el contenido es muy largo */
+            max-height: 90vh; /* Limitar altura para que quepa en la pantalla */
+        }
+
+        #dressCodeModal .dress-code-grid img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 767px) { /* Ajustes para móviles dentro del modal */
+            #dressCodeModal .dress-code-grid {
+                grid-template-columns: 1fr; /* Una columna para el contenido principal en móviles */
+                width: 95vw; /* Usar más ancho en móviles */
+                margin: 10px auto; /* Añadir margen vertical en móviles */
+                padding: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -236,20 +453,56 @@
 
     <!-- Navegación Fija -->
     <header class="fixed top-0 left-0 w-full bg-white bg-opacity-90 shadow-md z-50 py-4 px-6 md:px-12 rounded-b-lg">
-        <nav class="container mx-auto flex justify-center items-center flex-wrap">
-            <a href="#hero" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Inicio</a>
-            <a href="#nuestra-historia" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Nuestra Historia</a>
-            <a href="#galeria" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Galería</a>
-            <a href="#detalles" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">El Gran Día</a>
-            <a href="#dress-code" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Dress Code</a>
-            <a href="#itinerario" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Itinerario</a>
-            <a href="#hospedaje" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Hospedaje</a>
-            <a href="#regalos" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Regalos</a>
-            <a href="#confirmacion" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Confirmación</a>
-            <a href="#filtro" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Filtro IG</a>
-            <a href="#faqs" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">FAQs</a>
-        </nav>
+        <div class="container mx-auto flex justify-between items-center flex-wrap">
+            <!-- Título/Logo para la barra de navegación -->
+            <a href="#hero" class="text-2xl font-bold text-amber-700 font-playfair-display">A&A</a>
+
+            <!-- Menú de hamburguesa para pantallas pequeñas -->
+            <div class="md:hidden">
+                <button id="hamburger-btn" class="text-stone-700 text-2xl p-2 rounded-md hover:bg-stone-200 transition-colors duration-200">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navegación normal para pantallas grandes -->
+            <nav class="hidden md:flex flex-wrap justify-center">
+                <a href="#hero" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Inicio</a>
+                <a href="#nuestra-historia" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Nuestra Historia</a>
+                <a href="#galeria" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Galería</a>
+                <a href="#detalles" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">El Gran Día</a>
+                <a href="#dress-code" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Dress Code</a>
+                <a href="#itinerario" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Itinerario</a>
+                <a href="#como-llegar" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Cómo Llegar</a>
+                <a href="#hospedaje" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Hospedaje</a>
+                <a href="#regalos" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Regalos</a>
+                <a href="#confirmacion" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Confirmación</a>
+                <a href="#filtro" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Filtro IG</a>
+                <a href="#faqs" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">FAQs</a>
+            </nav>
+        </div>
     </header>
+
+    <!-- Overlay del menú móvil -->
+    <div id="mobile-menu-overlay"></div>
+
+    <!-- Menú de hamburguesa (lateral) -->
+    <div id="mobile-menu">
+        <button class="close-btn"><i class="fas fa-times"></i></button>
+        <nav class="flex flex-col mt-10">
+            <a href="#hero" class="mobile-nav-link">Inicio</a>
+            <a href="#nuestra-historia" class="mobile-nav-link">Nuestra Historia</a>
+            <a href="#galeria" class="mobile-nav-link">Galería</a>
+            <a href="#detalles" class="mobile-nav-link">El Gran Día</a>
+            <a href="#dress-code" class="mobile-nav-link">Dress Code</a>
+            <a href="#itinerario" class="mobile-nav-link">Itinerario</a>
+            <a href="#como-llegar" class="mobile-nav-link">Cómo Llegar</a>
+            <a href="#hospedaje" class="mobile-nav-link">Hospedaje</a>
+            <a href="#regalos" class="mobile-nav-link">Regalos</a>
+            <a href="#confirmacion" class="mobile-nav-link">Confirmación</a>
+            <a href="#filtro" class="mobile-nav-link">Filtro IG</a>
+            <a href="#faqs" class="mobile-nav-link">FAQs</a>
+        </nav>
+    </div>
 
     <!-- Sección de Portada/Héroe -->
     <section id="hero" class="relative h-screen flex items-center justify-center text-center parallax-bg" 
@@ -290,23 +543,25 @@
             <h2 class="text-5xl font-bold mb-12 text-amber-700">Nuestra Historia</h2>
             <div class="relative max-w-4xl mx-auto">
                 <!-- Línea de tiempo visual -->
-                <div class="hidden md:block absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2"></div>
+                <div class="absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2"></div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <!-- Hito 1 -->
                     <div class="relative md:text-right">
-                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
-                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                        <!-- Punto de la línea de tiempo -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-ml-2 transform md:-translate-y-1/2 left-0"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-4 md:border-r-0 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">El Primer Encuentro</h3>
-                            <p class="text-stone-600 mb-4">"Todo comenzó en 2015, en una tarde lluviosa en la universidad. Un cruce de miradas, una conversación accidental, y el inicio de algo mágico."</p>
-                            <img src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <p class="text-stone-600 mb-4">"Todo comenzó en 2018, en una tarde lluviosa en la universidad. Un cruce de miradas, una conversación accidental, y el inicio de algo mágico."</p>
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primer+Encuentro" alt="Primer Encuentro" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
                             <span class="text-sm text-stone-500">Junio 2018</span>
                         </div>
                     </div>
                     <!-- Hito 2 (a la derecha en desktop) -->
                     <div class="relative md:text-left">
-                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
-                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                        <!-- Punto de la línea de tiempo -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-ml-2 transform md:-translate-y-1/2 left-0"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-0 md:border-r-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">Nuestra Primera Cita</h3>
                             <p class="text-stone-600 mb-4">"Una cena improvisada que se convirtió en horas de risas y conversaciones profundas. Supimos que esto era diferente."</p>
                             <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primera+Cita" alt="Primera Cita" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
@@ -315,8 +570,9 @@
                     </div>
                     <!-- Hito 3 -->
                     <div class="relative md:text-right">
-                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
-                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                        <!-- Punto de la línea de tiempo -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-ml-2 transform md:-translate-y-1/2 left-0"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-4 md:border-r-0 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">El Viaje que lo Cambió Todo</h3>
                             <p class="text-stone-600 mb-4">"Un viaje inolvidable a la playa, donde cada atardecer nos confirmaba que estábamos hechos el uno para el otro."</p>
                             <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Viaje+Inolvidable" alt="Viaje Inolvidable" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
@@ -325,8 +581,9 @@
                     </div>
                     <!-- Hito 4 (a la derecha en desktop) -->
                     <div class="relative md:text-left">
-                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
-                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                        <!-- Punto de la línea de tiempo -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-ml-2 transform md:-translate-y-1/2 left-0"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-0 md:border-r-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">La Propuesta Soñada</h3>
                             <p class="text-stone-600 mb-4">"Bajo las estrellas, en nuestro lugar favorito, la pregunta que selló nuestro futuro. ¡Dije que sí!"</p>
                             <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Propuesta+de+Matrimonio" alt="Propuesta de Matrimonio" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
@@ -344,8 +601,8 @@
             <h2 class="text-5xl font-bold mb-12 text-amber-700">Nuestra Galería</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Foto 1 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg">
-                    <img src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Pareja+Sonriendo">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Pareja+Sonriendo" alt="Pareja Sonriendo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
@@ -406,8 +663,8 @@
                     <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-church mr-3"></i>Ceremonia</h3>
                     <p class="text-stone-600 mb-2"><strong>Fecha:</strong> Viernes, 25 de Octubre de 2025</p>
                     <p class="text-stone-600 mb-2"><strong>Hora:</strong> 17:00 Hrs.</p>
-                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Parroquia de San Miguel Arcángel</p>
-                    <p class="text-stone-600 mb-4">Calle Principal #123, Colonia Centro, Ciudad Marfil, MX</p>
+                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Quinta Las Lupitas</p>
+                    <p class="text-stone-600 mb-4">Oacalco Morelos, México</p>
                     <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Ver en Mapa
                     </a>
@@ -418,8 +675,8 @@
                     <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-glass-cheers mr-3"></i>Recepción</h3>
                     <p class="text-stone-600 mb-2"><strong>Fecha:</strong> Viernes, 25 de Octubre de 2025</p>
                     <p class="text-stone-600 mb-2"><strong>Hora:</strong> 19:00 Hrs.</p>
-                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Hacienda Los Robles</p>
-                    <p class="text-stone-600 mb-4">Carretera Antigua S/N, Afueras de la Ciudad, Ciudad Marfil, MX</p>
+                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Quinta Las Lupitas</p>
+                    <p class="text-stone-600 mb-4">Oacalco Morelos, México</p>
                     <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Ver en Mapa
                     </a>
@@ -433,7 +690,7 @@
         <div class="container mx-auto max-w-3xl">
             <h2 class="text-5xl font-bold mb-12 text-amber-700">Dress Code</h2>
             <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 animate-on-scroll">
-                <p class="text-lg text-stone-600 mb-6">Para nuestro día especial, les pedimos que nos acompañen vistiendo **Formal Elegante**.</p>
+                <p class="text-lg text-stone-600 mb-6">Para nuestro día especial, que se realizará en un hermoso **jardín**, les pedimos que nos acompañen vistiendo **Formal Elegante**.</p>
                 <div class="flex flex-col md:flex-row justify-center items-center gap-8">
                     <div class="text-center">
                         <i class="fas fa-male text-6xl text-amber-700 mb-4"></i>
@@ -442,7 +699,7 @@
                     </div>
                     <div class="text-center md:border-l md:border-stone-200 md:pl-8 md:ml-8">
                         <i class="fas fa-female text-6xl text-amber-700 mb-4"></i>
-                        <p class="text-xl font-semibold text-stone-700">Para Damas:</p>
+                        <p class="text-xl font-semibold text-stone-700 cursor-pointer" id="female-dress-code">Para Damas: <i class="fas fa-info-circle text-base ml-2"></i></p>
                         <p class="text-stone-600">Vestido largo o midi elegante, traje de dos piezas sofisticado. Colores claros o pasteles son bienvenidos.</p>
                     </div>
                 </div>
@@ -451,6 +708,31 @@
         </div>
     </section>
 
+    <!-- Modal para el Dress Code de Mujeres -->
+    <div id="dressCodeModal" class="modal">
+        <span class="modal-close" id="closeDressCodeModal">×</span>
+        <div class="dress-code-grid bg-white rounded-lg shadow-xl p-6">
+            <h3 class="text-3xl font-semibold text-amber-700 mb-4 col-span-full">Sugerencias para Damas</h3>
+            <p class="text-stone-600 mb-4 col-span-full">Aquí algunos ejemplos de estilos y colores apropiados:</p>
+            <div class="text-center">
+                <img src="https://placehold.co/400x300/DDC8A9/3A3A3A?text=Vestido+Largo+Pastel" alt="Vestido Largo Pastel">
+                <p class="text-sm text-stone-600 mt-2">Vestido Largo (Tonos Pastel)</p>
+            </div>
+            <div class="text-center">
+                <img src="https://placehold.co/400x300/B48C5C/3A3A3A?text=Vestido+Midi+Elegante" alt="Vestido Midi Elegante">
+                <p class="text-sm text-stone-600 mt-2">Vestido Midi Elegante</p>
+            </div>
+            <div class="text-center">
+                <img src="https://placehold.co/400x300/EDE9E0/3A3A3A?text=Traje+Dos+Piezas" alt="Traje de Dos Piezas Sofisticado">
+                <p class="text-sm text-stone-600 mt-2">Traje de Dos Piezas</p>
+            </div>
+            <div class="text-center">
+                <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro Suave">
+                <p class="text-sm text-stone-600 mt-2">Colores Claros / Suaves</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Sección Itinerario -->
     <section id="itinerario" class="py-20 px-6 bg-stone-50 text-center">
         <div class="container mx-auto max-w-4xl">
@@ -458,47 +740,51 @@
             <p class="text-lg text-stone-600 mb-10">Aquí les presentamos los momentos clave de nuestro gran día para que no se pierdan nada:</p>
             
             <div class="relative">
-                <!-- Línea de tiempo vertical -->
-                <div class="absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2 hidden md:block"></div>
+                <!-- Línea de tiempo vertical principal, visible en móviles y desktops -->
+                <div class="absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2 z-0"></div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-8">
                     <!-- Evento 1 -->
-                    <div class="flex items-center md:justify-end animate-on-scroll">
-                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -mr-2 z-10"></div>
-                        <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 md:border-r-0 md:border-l-4 border-amber-500 text-left md:text-right w-full md:w-11/12 ml-4 md:ml-0 md:pr-10">
+                    <div class="relative animate-on-scroll">
+                        <!-- Punto del itinerario -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full z-10 itinerary-dot"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-amber-500 text-left w-full itinerary-card">
                             <h3 class="text-2xl font-semibold mb-2 text-amber-700">17:00 Hrs - Ceremonia Religiosa</h3>
-                            <p class="text-stone-600">Parroquia de San Miguel Arcángel</p>
+                            <p class="text-stone-600">Quinta Las Lupitas, Oacalco Morelos</p>
                         </div>
                     </div>
                     <!-- Espacio en blanco para simular la alternancia en desktop -->
-                    <div></div> 
+                    <div class="hidden md:block"></div> 
                     
                     <!-- Evento 2 -->
-                    <div></div> <!-- Espacio en blanco para simular la alternancia en desktop -->
-                    <div class="flex items-center md:justify-start animate-on-scroll">
-                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -ml-2 z-10"></div>
-                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 md:border-l-0 md:border-r-4 border-amber-500 text-left w-full md:w-11/12 mr-4 md:mr-0 md:pl-10">
+                    <div class="hidden md:block"></div>
+                    <div class="relative animate-on-scroll">
+                        <!-- Punto del itinerario -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 z-10 itinerary-dot"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-amber-500 text-left w-full itinerary-card">
                             <h3 class="text-2xl font-semibold mb-2 text-amber-700">18:30 Hrs - Cóctel de Bienvenida</h3>
-                            <p class="text-stone-600">Jardines de Hacienda Los Robles</p>
+                            <p class="text-stone-600">Quinta Las Lupitas, Oacalco Morelos</p>
                         </div>
                     </div>
 
                     <!-- Evento 3 -->
-                    <div class="flex items-center md:justify-end animate-on-scroll">
-                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -mr-2 z-10"></div>
-                        <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 md:border-r-0 md:border-l-4 border-amber-500 text-left md:text-right w-full md:w-11/12 ml-4 md:ml-0 md:pr-10">
+                    <div class="relative animate-on-scroll">
+                        <!-- Punto del itinerario -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 z-10 itinerary-dot"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-amber-500 text-left w-full itinerary-card">
                             <h3 class="text-2xl font-semibold mb-2 text-amber-700">20:00 Hrs - Cena y Discurso</h3>
-                            <p class="text-stone-600">Salón Principal de Hacienda Los Robles</p>
+                            <p class="text-stone-600">Quinta Las Lupitas, Oacalco Morelos</p>
                         </div>
                     </div>
                     <!-- Espacio en blanco para simular la alternancia en desktop -->
-                    <div></div>
+                    <div class="hidden md:block"></div>
 
                     <!-- Evento 4 -->
-                    <div></div> <!-- Espacio en blanco para simular la alternancia en desktop -->
-                    <div class="flex items-center md:justify-start animate-on-scroll">
-                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -ml-2 z-10"></div>
-                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 md:border-l-0 md:border-r-4 border-amber-500 text-left w-full md:w-11/12 mr-4 md:mr-0 md:pl-10">
+                    <div class="hidden md:block"></div>
+                    <div class="relative animate-on-scroll">
+                        <!-- Punto del itinerario -->
+                        <div class="absolute w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 z-10 itinerary-dot"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-amber-500 text-left w-full itinerary-card">
                             <h3 class="text-2xl font-semibold mb-2 text-amber-700">21:30 Hrs - Baile y Celebración</h3>
                             <p class="text-stone-600">¡Que empiece la fiesta!</p>
                         </div>
@@ -506,6 +792,53 @@
                 </div>
             </div>
             <p class="mt-12 text-stone-600 text-lg">Los esperamos para compartir cada momento.</p>
+        </div>
+    </section>
+
+    <!-- Sección Cómo Llegar -->
+    <section id="como-llegar" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Cómo Llegar</h2>
+            <p class="text-lg text-stone-600 mb-10">Aquí te dejamos las indicaciones para llegar a los lugares del evento:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Cómo llegar en Vehículo Particular -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-car mr-3"></i>Vehículo Particular</h3>
+                    <p class="text-stone-600 mb-4">
+                        Si vienes en vehículo particular, te recomendamos tomar la **Carretera Federal Cuernavaca - Cuautla** en dirección a Oacalco. 
+                        Toma la salida hacia **Oacalco/Yautepec** y sigue las indicaciones hacia la Quinta Las Lupitas. 
+                        Habrá señalización clara en el camino.
+                    </p>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Abrir Ruta en Google Maps
+                    </a>
+                </div>
+
+                <!-- Cómo llegar en Transporte Público -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-bus mr-3"></i>Transporte Público</h3>
+                    <p class="text-stone-600 mb-4">
+                        Desde la Terminal de Autobuses de Taxqueña (CDMX), toma un autobús con destino a **Oacalco, Morelos**. 
+                        Una vez en Oacalco, puedes tomar un taxi local o un mototaxi que te lleve directamente a la Quinta Las Lupitas, la cual se encuentra a pocos minutos de la parada principal.
+                    </p>
+                    <ul class="list-disc list-inside text-left text-stone-600 space-y-2 mb-6">
+                        <li><strong>Autobús:</strong> Líneas "Pullman de Morelos" o "Futura" con destino a Oacalco.</li>
+                        <li><strong>Desde Oacalco:</strong> Taxi o mototaxi a Quinta Las Lupitas.</li>
+                    </ul>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Abrir Ubicación en Google Maps
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -518,31 +851,40 @@
                 <!-- Hotel 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                     <h3 class="text-2xl font-semibold mb-3 text-amber-700">Hotel Gran Confort</h3>
-                    <p class="text-stone-600 mb-2">Av. Principal #456, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-2">Av. Principal #456, Oacalco Morelos</p>
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 1234 5678</p>
-                    <p class="text-stone-600 mb-4">Tarifa especial con el código: BODA2025</p>
-                    <a href="https://www.granconfort.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
-                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
                     </a>
                 </div>
                 <!-- Hotel 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                     <h3 class="text-2xl font-semibold mb-3 text-amber-700">Boutique Hotel El Descanso</h3>
-                    <p class="text-stone-600 mb-2">Callejón del Sol #789, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-2">Callejón del Sol #789, Oacalco Morelos</p>
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 9876 5432</p>
-                    <p class="text-stone-600 mb-4">Encanto y tranquilidad, a pocos minutos del evento.</p>
-                    <a href="https://www.eldescanso.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
-                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                     <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
                     </a>
                 </div>
                 <!-- Hotel 3 -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                     <h3 class="text-2xl font-semibold mb-3 text-amber-700">Posada Colonial</h3>
-                    <p class="text-stone-600 mb-2">P-laza Principal #101, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-2">Plaza Principal #101, Oacalco Morelos</p>
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 2345 6789</p>
-                    <p class="text-stone-600 mb-4">Opción económica con excelente ubicación.</p>
-                    <a href="https://www.posadacolonial.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
-                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                     <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                    </iframe>
+                    <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
                     </a>
                 </div>
             </div>
@@ -563,7 +905,7 @@
                         <p class="text-stone-700 font-semibold mb-2">Datos Bancarios:</p>
                         <p class="text-sm text-stone-600"><strong>Banco:</strong> Bancolombia</p>
                         <p class="text-sm text-stone-600"><strong>Cuenta:</strong> XXXXXXXXXXXX</p>
-                        <p class="text-sm text-stone-600"><strong>Titular:</strong> Sofía & Miguel</p>
+                        <p class="text-sm text-stone-600"><strong>Titular:</strong> Aida & Alejandro</p>
                     </div>
                     <button onclick="copyToClipboard('XXXXXXXXXXXX')" class="bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-copy mr-2"></i>Copiar No. de Cuenta
@@ -596,7 +938,7 @@
             
             <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 flex flex-col items-center animate-on-scroll">
                 <p class="text-stone-700 text-lg font-semibold mb-6">Haz clic en el botón para confirmar tu asistencia vía WhatsApp:</p>
-                <a href="https://wa.me/+525511223344?text=Hola%20Aida%20y%20Alejandro,%20quisiera%20confirmar%20mi%20asistencia%20a%20su%20boda.%20Mi%20nombre%20es%20[TU%20NOMBRE]%20y%20asistiremos%20[CANTIDAD]%20adultos%20y%20[CANTIDAD]%20niños." 
+                <a href="https://wa.me/+525539993079?text=Hola%20Aida%20y%20Alejandro,%20quisiera%20confirmar%20mi%20asistencia%20a%20su%20boda.%20Mi%20nombre%20es%20[TU%20NOMBRE]%20y%20asistiremos%20[CANTIDAD]%20adultos%20y%20[CANTIDAD]%20niños." 
                    target="_blank" 
                    class="inline-block bg-green-500 text-white font-bold py-3 px-8 rounded-full hover:bg-green-600 transition-colors duration-300 shadow-lg text-lg">
                     <i class="fab fa-whatsapp mr-2"></i>Confirmar por WhatsApp
@@ -641,7 +983,7 @@
                 <!-- FAQ 1 -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
                     <h3 class="text-xl font-semibold mb-2 text-stone-700">¿Hay estacionamiento disponible en los lugares del evento?</h3>
-                    <p class="text-stone-600">Sí, tanto en la Parroquia como en la Hacienda Los Robles, hay amplias zonas de estacionamiento disponibles para los invitados.</p>
+                    <p class="text-stone-600">Sí, en la Quinta Las Lupitas, hay amplias zonas de estacionamiento disponibles para los invitados.</p>
                 </div>
                 <!-- FAQ 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
@@ -661,7 +1003,7 @@
             </div>
             <div class="mt-12 text-center text-stone-600">
                 <p class="text-xl font-semibold mb-4">¿Tienes más preguntas?</p>
-                <p>Contáctanos en: <a href="mailto:bodasofimiguel@email.com" class="text-amber-700 hover:underline">bodasofimiguel@email.com</a> o al teléfono: <a href="tel:+525511223344" class="text-amber-700 hover:underline">+52 55 1122 3344</a></p>
+                <p>Contáctanos en: <a href="mailto:boda_aida_alejandro@email.com" class="text-amber-700 hover:underline">boda_aida_alejandro@email.com</a> o al teléfono: <a href="tel:+525539993079" class="text-amber-700 hover:underline">+52 55 3999 3079</a></p>
             </div>
         </div>
     </section>
@@ -670,7 +1012,7 @@
     <footer class="bg-stone-800 text-white py-12 px-6 text-center rounded-t-lg">
         <div class="container mx-auto">
             <p class="text-2xl mb-4 font-playfair-display">¡Gracias por ser parte de nuestra historia de amor!</p>
-            <p class="text-4xl font-bold mb-6">Sofía & Miguel</p>
+            <p class="text-4xl font-bold mb-6">Aida & Alejandro</p>
             <p class="text-sm">© 2025 Todos los derechos reservados.</p>
         </div>
     </footer>
@@ -713,6 +1055,7 @@
                 '#detalles .animate-on-scroll, ' +
                 '#dress-code .animate-on-scroll, ' +
                 '#itinerario .animate-on-scroll, ' +
+                '#como-llegar .animate-on-scroll, ' +
                 '#hospedaje .animate-on-scroll, ' +
                 '#regalos .animate-on-scroll, ' +
                 '#confirmacion .animate-on-scroll, ' +
@@ -740,7 +1083,7 @@
                 observer.observe(element);
             });
 
-            // ** Smooth Scroll para la Navegación **
+            // ** Smooth Scroll para la Navegación (para enlaces dentro del menú normal) **
             document.querySelectorAll('header nav a').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -803,7 +1146,6 @@
             const backgroundMusic = document.getElementById('background-music');
             const audioToggleButton = document.getElementById('audio-toggle-btn'); // Botón flotante (disco)
             const audioToggleIcon = audioToggleButton.querySelector('i');
-            const recordBody = audioToggleButton.querySelector('.record-body');
             const heroPlayButtonWrapper = document.getElementById('hero-play-btn-wrapper'); // Contenedor del botón de inicio
             const heroPlayButton = document.getElementById('hero-play-btn'); // Botón de play inicial
 
@@ -874,6 +1216,8 @@
                     backgroundMusic.play().then(() => {
                         // Ocultar el botón de inicio
                         heroPlayButtonWrapper.classList.add('hidden'); 
+                        // Mostrar el botón de audio flotante
+                        audioToggleButton.classList.add('visible'); // Usa la nueva clase 'visible'
                         // Generar notas una vez desde el botón de inicio al hacer clic
                         createMusicNotes(heroPlayButton);
 
@@ -944,29 +1288,86 @@
             });
 
             // Establecer el estado inicial de los botones y animaciones al cargar la página
-            // La música se reproduce automáticamente pero silenciada al inicio (políticas del navegador)
-            if (backgroundMusic.paused && backgroundMusic.muted) {
-                // Caso: El audio no se pudo reproducir en absoluto y está muteado.
-                audioToggleIcon.classList.remove('fa-volume-up');
-                audioToggleIcon.classList.add('fa-volume-mute');
-                audioToggleButton.classList.remove('playing'); // No gira
-                heroPlayButtonWrapper.classList.remove('hidden'); // Mostrar botón de inicio
-                stopContinuousNotes();
-            } else if (!backgroundMusic.paused && backgroundMusic.muted) {
-                // Caso: El audio se está reproduciendo pero está silenciado (lo más común en autoplay).
-                audioToggleIcon.classList.remove('fa-volume-up');
-                audioToggleIcon.classList.add('fa-volume-mute');
-                audioToggleButton.classList.add('playing'); // El disco gira (la música está "en marcha")
-                heroPlayButtonWrapper.classList.remove('hidden'); // Mostrar botón de inicio para desmutear
-                stopContinuousNotes(); // No hay notas si está muteado
-            } else if (!backgroundMusic.paused && !backgroundMusic.muted) {
+            // El botón flotante de audio estará oculto por defecto por el CSS "opacity: 0; pointer-events: none;"
+            // El botón de play inicial sí estará visible
+            if (!backgroundMusic.paused && !backgroundMusic.muted) {
                  // Caso: El audio se está reproduciendo y NO está silenciado (rara vez en carga inicial sin interacción).
+                audioToggleButton.classList.add('visible'); // Mostrar el botón flotante si ya está sonando
+                heroPlayButtonWrapper.classList.add('hidden'); // Ocultar botón de inicio
                 audioToggleIcon.classList.remove('fa-volume-mute');
                 audioToggleIcon.classList.add('fa-volume-up');
                 audioToggleButton.classList.add('playing'); // Gira
-                heroPlayButtonWrapper.classList.add('hidden'); // Ocultar botón de inicio
                 startContinuousNotes(); // Iniciar notas
+            } else {
+                // Por defecto, o si el autoplay falla/está muteado, mostrar el botón de play inicial
+                heroPlayButtonWrapper.classList.remove('hidden');
+                audioToggleButton.classList.remove('visible'); // Asegurarse de que esté oculto
+                audioToggleIcon.classList.remove('fa-volume-up');
+                audioToggleIcon.classList.add('fa-volume-mute'); // Mostrarlo como muteado por defecto
+                audioToggleButton.classList.remove('playing'); // No gira
+                stopContinuousNotes();
             }
+
+            // --- Funcionalidad del Menú Hamburguesa ---
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMenuBtn = mobileMenu.querySelector('.close-btn');
+            const mobileNavLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+
+            function openMenu() {
+                mobileMenu.classList.add('open');
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Evitar scroll del body
+            }
+
+            function closeMenu() {
+                mobileMenu.classList.remove('open');
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restaurar scroll del body
+            }
+
+            hamburgerBtn.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            mobileMenuOverlay.addEventListener('click', closeMenu); // Cerrar al hacer clic fuera
+
+            // Cerrar menú al hacer clic en un enlace de navegación móvil
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevenir el salto instantáneo
+                    const targetId = link.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    closeMenu(); // Cerrar el menú después de navegar
+                });
+            });
+
+            // --- Funcionalidad del Modal de Dress Code ---
+            const femaleDressCodeBtn = document.getElementById('female-dress-code');
+            const dressCodeModal = document.getElementById('dressCodeModal');
+            const closeDressCodeModalBtn = document.getElementById('closeDressCodeModal');
+
+            if (femaleDressCodeBtn) {
+                femaleDressCodeBtn.addEventListener('click', () => {
+                    dressCodeModal.style.display = 'flex';
+                    setTimeout(() => dressCodeModal.style.opacity = '1', 10);
+                });
+            }
+
+            if (closeDressCodeModalBtn) {
+                closeDressCodeModalBtn.addEventListener('click', () => {
+                    dressCodeModal.style.opacity = '0';
+                    setTimeout(() => dressCodeModal.style.display = 'none', 300);
+                });
+            }
+
+            dressCodeModal.addEventListener('click', (e) => {
+                if (e.target === dressCodeModal) {
+                    dressCodeModal.style.opacity = '0';
+                    setTimeout(() => dressCodeModal.style.display = 'none', 300);
+                }
+            });
         });
     </script>
 </body>
