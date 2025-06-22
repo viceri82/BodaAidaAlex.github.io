@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Nos Casamos! Aida & Alejandro</title>
+    <!-- Enlace a Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Enlace a Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts - Inter para una fuente moderna y legible -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos personalizados para la paleta de colores y fuentes */
+        :root {
+            --color-primary-bg: #FDFBF6; /* Marfil muy claro */
+            --color-secondary-bg: #EDE9E0; /* Beige claro */
+            --color-text-dark: #3A3A3A;   /* Gris oscuro */
+            --color-text-light: #5A5A5A;  /* Gris medio */
+            --color-accent: #B48C5C;      /* Dorado suave */
+            --color-soft-accent: #DDC8A9; /* Tono más suave del dorado */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-primary-bg);
+            color: var(--color-text-dark);
+            overflow-x: hidden; /* Prevenir scroll horizontal */
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--color-accent);
+        }
+
+        /* Estilos para las animaciones al aparecer en scroll */
+        /* Aplicar directamente a los elementos de contenido para animación individual */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out; /* Duración aumentada a 1.5s */
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Estilos para el efecto parallax en la sección de héroe */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Estilo para el modal de la galería */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Posición fija */
+            z-index: 1000; /* Estar encima de todo */
+            left: 0;
+            top: 0;
+            width: 100%; /* Ancho completo */
+            height: 100%; /* Alto completo */
+            overflow: auto; /* Habilitar scroll si es necesario */
+            background-color: rgba(0,0,0,0.8); /* Fondo semi-transparente negro */
+            backdrop-filter: blur(5px); /* Efecto de desenfoque */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain; /* Asegura que la imagen se ajuste bien */
+            border-radius: 0.75rem; /* Esquinas redondeadas */
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive para el modal */
+        @media (max-width: 768px) {
+            .modal-close {
+                top: 10px;
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+
+        /* --- Estilos del Botón de Audio "Disco de Acetato" Flotante --- */
+        #audio-toggle-btn {
+            width: 80px; /* Tamaño del disco */
+            height: 80px;
+            border-radius: 50%; /* Hacerlo circular */
+            background-color: #222; /* Color oscuro del vinilo */
+            border: 5px solid var(--color-soft-accent); /* Borde dorado para simular el anillo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 48px; /* Posición vertical */
+            right: 32px; /* Posición horizontal */
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5); /* Sombra más pronunciada */
+            z-index: 50; /* Asegurarse de que esté encima de otros elementos */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            overflow: hidden; /* Asegurar que las notas no se salgan del borde del botón */
+            transform-origin: center center; /* Para la rotación */
+        }
+
+        /* Círculo central que simula la etiqueta del disco */
+        #audio-toggle-btn::before {
+            content: '';
+            position: absolute;
+            width: 30px; /* Tamaño del centro */
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--color-accent); /* Color dorado de la etiqueta */
+            border: 2px solid white; /* Punto blanco central */
+            z-index: 1; /* Por encima del fondo oscuro del disco */
+        }
+
+        /* Icono de Volumen (mute/unmute) */
+        #audio-toggle-btn i {
+            position: relative;
+            z-index: 2; /* Por encima de la etiqueta central */
+            color: white; /* Color del icono */
+            font-size: 28px; /* Tamaño del icono */
+            transition: transform 0.3s ease;
+        }
+
+        /* Animación de giro para el disco cuando está sonando */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Aplicar la animación al botón principal cuando la música está sonando */
+        #audio-toggle-btn.playing .record-body {
+            animation: spin 2s linear infinite; /* Animación de giro más rápida */
+        }
+
+        /* --- Estilos para las Notas Musicales Flotantes --- */
+        .music-note {
+            position: fixed; /* Fijo en la ventana */
+            color: var(--color-accent); /* Color dorado para las notas */
+            font-size: 24px; /* Tamaño de las notas */
+            opacity: 0; /* Empieza invisible */
+            transform: translate(0, 0); /* Posición inicial */
+            animation: flyUpAndFade 2s ease-out forwards; /* Duración de la animación */
+            z-index: 51; /* Por encima del botón */
+            pointer-events: none; /* No interactuable con el ratón */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Pequeño brillo */
+        }
+
+        /* Animación de las notas: suben y se desvanecen con movimiento aleatorio */
+        @keyframes flyUpAndFade {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(0.5); /* Empieza pequeña y sin opacidad */
+            }
+            20% {
+                opacity: 1;
+                transform: translate(var(--initial-x), var(--initial-y)) scale(1); /* Aparece y se mueve un poco */
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--final-x), var(--final-y)) scale(1.5); /* Se mueve hacia arriba/afuera y se agranda, desvaneciéndose */
+            }
+        }
+
+        /* Estilo para el "cuerpo" del disco que rota */
+        .record-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #666; /* Un gris medio para que se noten las pistas */
+            /* Simular las pistas del vinilo con box-shadows */
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,0.1), /* Borde interior del vinilo */
+                inset 0 0 0 5px rgba(255,255,255,0.05), /* Pista 1 */
+                inset 0 0 0 10px rgba(255,255,255,0.1), /* Pista 2 */
+                inset 0 0 0 15px rgba(255,255,255,0.15), /* Pista 3 */
+                inset 0 0 0 20px rgba(255,255,255,0.2), /* Pista 4 */
+                inset 0 0 0 25px rgba(255,255,255,0.25), /* Pista 5 */
+                inset 0 0 0 30px rgba(255,255,255,0.3); /* Pista 6 */
+            z-index: 0; /* Detrás del icono y la etiqueta */
+        }
+
+        /* Estilo para el botón de play inicial */
+        #hero-play-btn-wrapper {
+            transition: opacity 0.5s ease-out; /* Transición para que el botón desaparezca suavemente */
+        }
+        #hero-play-btn-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none; /* Deshabilitar clics cuando está oculto */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Audio de fondo -->
+    <audio id="background-music" autoplay loop muted>
+        <source src="https://cdn.pixabay.com/download/audio/2024/04/16/audio_749a1d6c0e.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Botón para controlar el audio (Disco de Acetato flotante) -->
+    <button id="audio-toggle-btn" class="fixed bottom-48 right-8">
+        <div class="record-body"></div> <!-- Esta es la parte que girará -->
+        <i class="fas fa-volume-up"></i> <!-- Icono de Volumen (mute/unmute) -->
+    </button>
+
+    <!-- Navegación Fija -->
+    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-90 shadow-md z-50 py-4 px-6 md:px-12 rounded-b-lg">
+        <nav class="container mx-auto flex justify-center items-center flex-wrap">
+            <a href="#hero" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Inicio</a>
+            <a href="#nuestra-historia" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Nuestra Historia</a>
+            <a href="#galeria" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Galería</a>
+            <a href="#detalles" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">El Gran Día</a>
+            <a href="#dress-code" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Dress Code</a>
+            <a href="#itinerario" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Itinerario</a>
+            <a href="#hospedaje" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Hospedaje</a>
+            <a href="#regalos" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Regalos</a>
+            <a href="#confirmacion" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Confirmación</a>
+            <a href="#filtro" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">Filtro IG</a>
+            <a href="#faqs" class="mx-3 my-1 text-sm font-semibold text-stone-700 hover:text-amber-700 transition-colors duration-300">FAQs</a>
+        </nav>
+    </header>
+
+    <!-- Sección de Portada/Héroe -->
+    <section id="hero" class="relative h-screen flex items-center justify-center text-center parallax-bg" 
+        style="background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+        <div class="absolute inset-0 bg-black opacity-30"></div> <!-- Capa oscura para contraste -->
+        <div class="relative z-10 text-white p-6 md:p-12 bg-black bg-opacity-40 rounded-xl shadow-lg transform transition-transform duration-1000 ease-out scale-95 hover:scale-100">
+            <h1 class="text-4xl md:text-7xl font-bold mb-4 tracking-wider">¡Nos Casamos!</h1>
+            <p class="text-3xl md:text-5xl font-light mb-6">Aida & Alejandro</p>
+            <p class="text-xl md:text-3xl mb-8">13 de Diciembre de 2025</p>
+
+            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-2xl md:text-4xl font-semibold mb-8">
+                <div class="p-3 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm shadow-md">
+                    <span id="days">00</span><br><span class="text-sm">Días</span>
+                </div>
+                <div class="p-3 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm shadow-md">
+                    <span id="hours">00</span><br><span class="text-sm">Horas</span>
+                </div>
+                <div class="p-3 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm shadow-md">
+                    <span id="minutes">00</span><br><span class="text-sm">Minutos</span>
+                </div>
+                <div class="p-3 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm shadow-md">
+                    <span id="seconds">00</span><br><span class="text-sm">Segundos</span>
+                </div>
+            </div>
+
+            <!-- Botón de Play Inicial -->
+            <div id="hero-play-btn-wrapper">
+                <button id="hero-play-btn" class="bg-white bg-opacity-20 text-white px-6 py-3 rounded-full hover:bg-opacity-30 transition-all duration-300 shadow-md text-lg">
+                    <i class="fas fa-play mr-2"></i> Presiona play y desliza hacia abajo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Nuestra Historia (Momentos Importantes) -->
+    <section id="nuestra-historia" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Nuestra Historia</h2>
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Línea de tiempo visual -->
+                <div class="hidden md:block absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- Hito 1 -->
+                    <div class="relative md:text-right">
+                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                            <h3 class="text-3xl font-semibold mb-3">El Primer Encuentro</h3>
+                            <p class="text-stone-600 mb-4">"Todo comenzó en 2018, en una tarde lluviosa en la universidad. Un cruce de miradas, una conversación accidental, y el inicio de algo mágico."</p>
+                            <img src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <span class="text-sm text-stone-500">Junio 2018</span>
+                        </div>
+                    </div>
+                    <!-- Hito 2 (a la derecha en desktop) -->
+                    <div class="relative md:text-left">
+                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                            <h3 class="text-3xl font-semibold mb-3">Nuestra Primera Cita</h3>
+                            <p class="text-stone-600 mb-4">"Una cena improvisada que se convirtió en horas de risas y conversaciones profundas. Supimos que esto era diferente."</p>
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primera+Cita" alt="Primera Cita" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <span class="text-sm text-stone-500">Septiembre 2018</span>
+                        </div>
+                    </div>
+                    <!-- Hito 3 -->
+                    <div class="relative md:text-right">
+                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                            <h3 class="text-3xl font-semibold mb-3">El Viaje que lo Cambió Todo</h3>
+                            <p class="text-stone-600 mb-4">"Un viaje inolvidable a la playa, donde cada atardecer nos confirmaba que estábamos hechos el uno para el otro."</p>
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Viaje+Inolvidable" alt="Viaje Inolvidable" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <span class="text-sm text-stone-500">Mayo 2020</span>
+                        </div>
+                    </div>
+                    <!-- Hito 4 (a la derecha en desktop) -->
+                    <div class="relative md:text-left">
+                        <div class="md:absolute md:left-1/2 md:-ml-2 w-4 h-4 bg-amber-700 rounded-full top-2 md:top-1/2 md:-translate-y-1/2"></div>
+                        <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                            <h3 class="text-3xl font-semibold mb-3">La Propuesta Soñada</h3>
+                            <p class="text-stone-600 mb-4">"Bajo las estrellas, en nuestro lugar favorito, la pregunta que selló nuestro futuro. ¡Dije que sí!"</p>
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Propuesta+de+Matrimonio" alt="Propuesta de Matrimonio" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <span class="text-sm text-stone-500">Septiembre 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Galería de Fotos -->
+    <section id="galeria" class="py-20 px-6 bg-stone-100 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Nuestra Galería</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Foto 1 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg">
+                    <img src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Foto 2 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Abrazo+Cariñoso">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Abrazo+Cariñoso" alt="Abrazo Cariñoso" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Foto 3 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Beso+Apasionado">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Beso+Apasionado" alt="Beso Apasionado" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Foto 4 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Mano+con+Anillo">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Mano+con+Anillo" alt="Mano con Anillo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Foto 5 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Risas+Juntos">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Risas+Juntos" alt="Risas Juntos" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Foto 6 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Atardecer+Romántico">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Atardecer+Romántico" alt="Atardecer Romántico" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+                <!-- Añade más fotos según necesites -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal para la galería de imágenes -->
+    <div id="galleryModal" class="modal">
+        <span class="modal-close">×</span>
+        <img class="modal-content" id="imgModal">
+    </div>
+
+    <!-- Sección Detalles del Evento -->
+    <section id="detalles" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">El Gran Día</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <!-- Detalles de la Ceremonia -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-church mr-3"></i>Ceremonia</h3>
+                    <p class="text-stone-600 mb-2"><strong>Fecha:</strong> Viernes, 25 de Octubre de 2025</p>
+                    <p class="text-stone-600 mb-2"><strong>Hora:</strong> 17:00 Hrs.</p>
+                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Parroquia de San Miguel Arcángel</p>
+                    <p class="text-stone-600 mb-4">Calle Principal #123, Colonia Centro, Ciudad Marfil, MX</p>
+                    <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Ver en Mapa
+                    </a>
+                </div>
+
+                <!-- Detalles de la Recepción -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-glass-cheers mr-3"></i>Recepción</h3>
+                    <p class="text-stone-600 mb-2"><strong>Fecha:</strong> Viernes, 25 de Octubre de 2025</p>
+                    <p class="text-stone-600 mb-2"><strong>Hora:</strong> 19:00 Hrs.</p>
+                    <p class="text-stone-600 mb-4"><strong>Lugar:</strong> Hacienda Los Robles</p>
+                    <p class="text-stone-600 mb-4">Carretera Antigua S/N, Afueras de la Ciudad, Ciudad Marfil, MX</p>
+                    <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Ver en Mapa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Dress Code -->
+    <section id="dress-code" class="py-20 px-6 bg-stone-100 text-center">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Dress Code</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 animate-on-scroll">
+                <p class="text-lg text-stone-600 mb-6">Para nuestro día especial, les pedimos que nos acompañen vistiendo **Formal Elegante**.</p>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                    <div class="text-center">
+                        <i class="fas fa-male text-6xl text-amber-700 mb-4"></i>
+                        <p class="text-xl font-semibold text-stone-700">Para Caballeros:</p>
+                        <p class="text-stone-600">Traje oscuro (negro, azul marino o gris), camisa de vestir, corbata y zapatos de vestir.</p>
+                    </div>
+                    <div class="text-center md:border-l md:border-stone-200 md:pl-8 md:ml-8">
+                        <i class="fas fa-female text-6xl text-amber-700 mb-4"></i>
+                        <p class="text-xl font-semibold text-stone-700">Para Damas:</p>
+                        <p class="text-stone-600">Vestido largo o midi elegante, traje de dos piezas sofisticado. Colores claros o pasteles son bienvenidos.</p>
+                    </div>
+                </div>
+                <p class="text-stone-500 text-sm mt-8">Agradecemos de antemano su atención a esta sugerencia.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Itinerario -->
+    <section id="itinerario" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Itinerario del Día</h2>
+            <p class="text-lg text-stone-600 mb-10">Aquí les presentamos los momentos clave de nuestro gran día para que no se pierdan nada:</p>
+            
+            <div class="relative">
+                <!-- Línea de tiempo vertical -->
+                <div class="absolute left-1/2 w-0.5 h-full bg-stone-300 transform -translate-x-1/2 hidden md:block"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-8">
+                    <!-- Evento 1 -->
+                    <div class="flex items-center md:justify-end animate-on-scroll">
+                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -mr-2 z-10"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 md:border-r-0 md:border-l-4 border-amber-500 text-left md:text-right w-full md:w-11/12 ml-4 md:ml-0 md:pr-10">
+                            <h3 class="text-2xl font-semibold mb-2 text-amber-700">17:00 Hrs - Ceremonia Religiosa</h3>
+                            <p class="text-stone-600">Parroquia de San Miguel Arcángel</p>
+                        </div>
+                    </div>
+                    <!-- Espacio en blanco para simular la alternancia en desktop -->
+                    <div></div> 
+                    
+                    <!-- Evento 2 -->
+                    <div></div> <!-- Espacio en blanco para simular la alternancia en desktop -->
+                    <div class="flex items-center md:justify-start animate-on-scroll">
+                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -ml-2 z-10"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 md:border-l-0 md:border-r-4 border-amber-500 text-left w-full md:w-11/12 mr-4 md:mr-0 md:pl-10">
+                            <h3 class="text-2xl font-semibold mb-2 text-amber-700">18:30 Hrs - Cóctel de Bienvenida</h3>
+                            <p class="text-stone-600">Jardines de Hacienda Los Robles</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 3 -->
+                    <div class="flex items-center md:justify-end animate-on-scroll">
+                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -mr-2 z-10"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 md:border-r-0 md:border-l-4 border-amber-500 text-left md:text-right w-full md:w-11/12 ml-4 md:ml-0 md:pr-10">
+                            <h3 class="text-2xl font-semibold mb-2 text-amber-700">20:00 Hrs - Cena y Discurso</h3>
+                            <p class="text-stone-600">Salón Principal de Hacienda Los Robles</p>
+                        </div>
+                    </div>
+                    <!-- Espacio en blanco para simular la alternancia en desktop -->
+                    <div></div>
+
+                    <!-- Evento 4 -->
+                    <div></div> <!-- Espacio en blanco para simular la alternancia en desktop -->
+                    <div class="flex items-center md:justify-start animate-on-scroll">
+                        <div class="hidden md:block w-4 h-4 bg-amber-700 rounded-full flex-shrink-0 -ml-2 z-10"></div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 md:border-l-0 md:border-r-4 border-amber-500 text-left w-full md:w-11/12 mr-4 md:mr-0 md:pl-10">
+                            <h3 class="text-2xl font-semibold mb-2 text-amber-700">21:30 Hrs - Baile y Celebración</h3>
+                            <p class="text-stone-600">¡Que empiece la fiesta!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-12 text-stone-600 text-lg">Los esperamos para compartir cada momento.</p>
+        </div>
+    </section>
+
+    <!-- Sección Alojamiento Cercano -->
+    <section id="hospedaje" class="py-20 px-6 bg-stone-100 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Hospedaje Sugerido</h2>
+            <p class="text-lg text-stone-600 mb-10 max-w-3xl mx-auto">Para nuestros invitados de fuera, hemos seleccionado algunas opciones de hospedaje cercanas a los lugares del evento:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Hotel 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-3 text-amber-700">Hotel Gran Confort</h3>
+                    <p class="text-stone-600 mb-2">Av. Principal #456, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 1234 5678</p>
+                    <p class="text-stone-600 mb-4">Tarifa especial con el código: BODA2025</p>
+                    <a href="https://www.granconfort.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
+                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
+                </div>
+                <!-- Hotel 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-3 text-amber-700">Boutique Hotel El Descanso</h3>
+                    <p class="text-stone-600 mb-2">Callejón del Sol #789, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 9876 5432</p>
+                    <p class="text-stone-600 mb-4">Encanto y tranquilidad, a pocos minutos del evento.</p>
+                    <a href="https://www.eldescanso.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
+                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
+                </div>
+                <!-- Hotel 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-b-4 border-soft-accent transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-2xl font-semibold mb-3 text-amber-700">Posada Colonial</h3>
+                    <p class="text-stone-600 mb-2">P-laza Principal #101, Ciudad Marfil</p>
+                    <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 2345 6789</p>
+                    <p class="text-stone-600 mb-4">Opción económica con excelente ubicación.</p>
+                    <a href="https://www.posadacolonial.com" target="_blank" class="inline-block text-amber-700 hover:underline transition-colors duration-300">
+                        Visitar sitio web <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Lluvia de Sobres / Mesa de Regalos -->
+    <section id="regalos" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Regalos</h2>
+            <p class="text-lg text-stone-600 mb-10 max-w-4xl mx-auto">Su presencia es nuestro mayor regalo. Sin embargo, si desean honrarnos con un obsequio, aquí les compartimos algunas opciones:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                <!-- Lluvia de Sobres -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-envelope-open-text mr-3"></i>Lluvia de Sobres</h3>
+                    <p class="text-stone-600 mb-4">Si prefieren contribuir a nuestra luna de miel o a nuestro nuevo hogar, pueden hacerlo directamente.</p>
+                    <div class="flex flex-col items-center mb-6">
+                        <p class="text-stone-700 font-semibold mb-2">Datos Bancarios:</p>
+                        <p class="text-sm text-stone-600"><strong>Banco:</strong> Bancolombia</p>
+                        <p class="text-sm text-stone-600"><strong>Cuenta:</strong> XXXXXXXXXXXX</p>
+                        <p class="text-sm text-stone-600"><strong>Titular:</strong> Sofía & Miguel</p>
+                    </div>
+                    <button onclick="copyToClipboard('XXXXXXXXXXXX')" class="bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-copy mr-2"></i>Copiar No. de Cuenta
+                    </button>
+                    <p id="copyMessage" class="text-green-600 mt-2 hidden">¡Número de cuenta copiado!</p>
+                </div>
+
+                <!-- Mesa de Regalos -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 transition-transform duration-500 hover:scale-105 animate-on-scroll">
+                    <h3 class="text-3xl font-semibold mb-4 flex items-center justify-center text-amber-700"><i class="fas fa-gift mr-3"></i>Mesa de Regalos</h3>
+                    <p class="text-stone-600 mb-4">Hemos seleccionado algunos artículos que nos ayudarán a construir nuestro hogar en las siguientes tiendas:</p>
+                    <ul class="list-disc list-inside text-left text-stone-600 space-y-2 mb-6">
+                        <li><a href="https://www.amazon.com/wedding/sofia-miguel" target="_blank" class="text-amber-700 hover:underline"><i class="fab fa-amazon mr-2"></i>Amazon México</a></li>
+                        <li><a href="https://www.palaciodehierro.com/mesas-de-regalos/sofia-miguel" target="_blank" class="text-amber-700 hover:underline">Palacio de Hierro</a></li>
+                        <li><a href="https://www.liverpool.com.mx/tienda/mesaderegalos/sofia-miguel" target="_blank" class="text-amber-700 hover:underline">Liverpool</a></li>
+                    </ul>
+                    <a href="#" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
+                        <i class="fas fa-shopping-bag mr-2"></i>Ver Mesas de Regalos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Confirmación de Asistencia (RSVP) -->
+    <section id="confirmacion" class="py-20 px-6 bg-stone-100 text-center">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Confirma tu Asistencia</h2>
+            <p class="text-lg text-stone-600 mb-8">¡Esperamos verte en nuestro día especial! Por favor, confírmanos tu asistencia enviándonos un mensaje por WhatsApp. ¡Será un placer contar contigo!</p>
+            
+            <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 flex flex-col items-center animate-on-scroll">
+                <p class="text-stone-700 text-lg font-semibold mb-6">Haz clic en el botón para confirmar tu asistencia vía WhatsApp:</p>
+                <a href="https://wa.me/+525511223344?text=Hola%20Aida%20y%20Alejandro,%20quisiera%20confirmar%20mi%20asistencia%20a%20su%20boda.%20Mi%20nombre%20es%20[TU%20NOMBRE]%20y%20asistiremos%20[CANTIDAD]%20adultos%20y%20[CANTIDAD]%20niños." 
+                   target="_blank" 
+                   class="inline-block bg-green-500 text-white font-bold py-3 px-8 rounded-full hover:bg-green-600 transition-colors duration-300 shadow-lg text-lg">
+                    <i class="fab fa-whatsapp mr-2"></i>Confirmar por WhatsApp
+                </a>
+                <p class="text-sm text-stone-500 mt-4">
+                    Por favor, reemplaza `[TU NOMBRE]`, `[CANTIDAD] adultos` y `[CANTIDAD] niños` en el mensaje predefinido de WhatsApp.
+                    También puedes especificar cualquier restricción dietética o mensaje adicional en tu WhatsApp.
+                </p>
+                <p class="text-base text-stone-600 mt-4">Fecha límite para confirmar: <strong>25 de Septiembre de 2025</strong>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Filtro Personalizado -->
+    <section id="filtro" class="py-20 px-6 bg-stone-50 text-center">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">¡Comparte en Redes!</h2>
+            <p class="text-lg text-stone-600 mb-8">Nos encantaría ver sus momentos especiales de la boda. ¡Usen nuestro filtro de Instagram y el hashtag oficial!</p>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 animate-on-scroll">
+                <div class="md:w-1/2">
+                    <h3 class="text-3xl font-semibold mb-4 text-amber-700">Filtro de Instagram</h3>
+                    <p class="text-stone-600 mb-4">Busca nuestro filtro personalizado en Instagram o escanéa el código QR:</p>
+                    <img src="https://placehold.co/200x200/EDE9E0/B48C5C?text=Código+QR+Filtro" alt="Código QR Filtro de Instagram" class="mx-auto w-48 h-48 rounded-md mb-4 shadow-md">
+                    <p class="text-sm text-stone-500">¡Pronto disponible en Instagram!</p>
+                </div>
+                <div class="md:w-1/2 border-t md:border-t-0 md:border-l border-stone-200 md:pl-8 pt-8 md:pt-0">
+                    <h3 class="text-3xl font-semibold mb-4 text-amber-700">Nuestro Hashtag Oficial</h3>
+                    <p class="text-stone-600 mb-4">Usa nuestro hashtag en todas tus publicaciones:</p>
+                    <p class="text-4xl font-bold text-stone-800 mb-6 bg-stone-100 p-4 rounded-lg inline-block shadow-inner">#AidayAlex</p>
+                    <p class="text-stone-600">¡Queremos ver todas sus fotos y videos!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Preguntas Frecuentes (FAQ) -->
+    <section id="faqs" class="py-20 px-6 bg-stone-100 text-center">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-5xl font-bold mb-12 text-amber-700">Preguntas Frecuentes</h2>
+            <div class="space-y-6 text-left">
+                <!-- FAQ 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-2 text-stone-700">¿Hay estacionamiento disponible en los lugares del evento?</h3>
+                    <p class="text-stone-600">Sí, tanto en la Parroquia como en la Hacienda Los Robles, hay amplias zonas de estacionamiento disponibles para los invitados.</p>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-2 text-stone-700">¿Se permiten niños en la recepción?</h3>
+                    <p class="text-stone-600">¡Absolutamente! Nos encantaría que los pequeños nos acompañen. Por favor, indícanos cuántos niños asistirán en el formulario de confirmación para tenerlos en cuenta en el menú y actividades.</p>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-2 text-stone-700">¿Hasta cuándo puedo confirmar mi asistencia?</h3>
+                    <p class="text-stone-600">Te agradeceríamos si pudieras confirmar tu asistencia a más tardar el <strong>25 de Septiembre de 2025</strong>. Esto nos ayuda mucho con la logística.</p>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500 animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-2 text-stone-700">¿Puedo llevar un acompañante si mi invitación es individual?</h3>
+                    <p class="text-stone-600">Nuestras invitaciones son personales e intransferibles, pero si tienes alguna duda específica, no dudes en contactarnos.</p>
+                </div>
+            </div>
+            <div class="mt-12 text-center text-stone-600">
+                <p class="text-xl font-semibold mb-4">¿Tienes más preguntas?</p>
+                <p>Contáctanos en: <a href="mailto:bodasofimiguel@email.com" class="text-amber-700 hover:underline">bodasofimiguel@email.com</a> o al teléfono: <a href="tel:+525511223344" class="text-amber-700 hover:underline">+52 55 1122 3344</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pie de Página -->
+    <footer class="bg-stone-800 text-white py-12 px-6 text-center rounded-t-lg">
+        <div class="container mx-auto">
+            <p class="text-2xl mb-4 font-playfair-display">¡Gracias por ser parte de nuestra historia de amor!</p>
+            <p class="text-4xl font-bold mb-6">Sofía & Miguel</p>
+            <p class="text-sm">© 2025 Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Fecha de la boda (Año, Mes-1, Día, Hora, Minuto, Segundo)
+        const weddingDate = new Date("December 16, 2025 18:00:00").getTime();
+
+        // Actualizar el contador cada segundo
+        const countdownInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            // Cálculos de tiempo
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Mostrar el resultado en los elementos
+            document.getElementById("days").innerHTML = String(days).padStart(2, '0');
+            document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
+
+            // Si la cuenta atrás ha terminado
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown").innerHTML = "<p class='text-4xl text-amber-500'>¡Ya nos casamos!</p>";
+            }
+        }, 1000);
+
+        // ** Funcionalidad de Animación al Hacer Scroll (Intersection Observer) **
+        document.addEventListener('DOMContentLoaded', () => {
+            // Seleccionar todos los elementos que deben animarse al hacer scroll
+            const animatedElements = document.querySelectorAll(
+                '#nuestra-historia .animate-on-scroll, ' +
+                '#galeria .animate-on-scroll, ' +
+                '#detalles .animate-on-scroll, ' +
+                '#dress-code .animate-on-scroll, ' +
+                '#itinerario .animate-on-scroll, ' +
+                '#hospedaje .animate-on-scroll, ' +
+                '#regalos .animate-on-scroll, ' +
+                '#confirmacion .animate-on-scroll, ' +
+                '#filtro .animate-on-scroll, ' +
+                '#faqs .animate-on-scroll'
+            );
+            
+            const observerOptions = {
+                root: null, // El viewport es el root
+                rootMargin: '0px',
+                threshold: 0.1 // Cuando el 10% del elemento es visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            animatedElements.forEach(element => {
+                element.classList.add('animate-on-scroll');
+                observer.observe(element);
+            });
+
+            // ** Smooth Scroll para la Navegación **
+            document.querySelectorAll('header nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // ** Funcionalidad de la Galería de Fotos (Modal Simple) **
+            const galleryImages = document.querySelectorAll('#galeria .group');
+            const modal = document.getElementById('galleryModal');
+            const modalImg = document.getElementById('imgModal');
+            const closeBtn = document.querySelector('.modal-close');
+
+            galleryImages.forEach(imageWrapper => {
+                imageWrapper.addEventListener('click', function() {
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.style.opacity = '1', 10);
+                    modalImg.src = this.getAttribute('data-src');
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.style.display = 'none', 300);
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.opacity = '0';
+                    setTimeout(() => modal.style.display = 'none', 300);
+                }
+            });
+
+            // ** Funcionalidad de Copiar al Portapapeles **
+            window.copyToClipboard = function(text) {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    const messageElement = document.getElementById('copyMessage');
+                    messageElement.classList.remove('hidden');
+                    messageElement.style.opacity = '0';
+                    setTimeout(() => messageElement.style.opacity = '1', 10);
+                    setTimeout(() => {
+                        messageElement.style.opacity = '0';
+                        setTimeout(() => messageElement.classList.add('hidden'), 300);
+                    }, 2000);
+                } catch (err) {
+                    console.error('No se pudo copiar el texto: ', err);
+                }
+                document.body.removeChild(tempInput);
+            };
+
+            // ** Control del Audio y Animación del Disco **
+            const backgroundMusic = document.getElementById('background-music');
+            const audioToggleButton = document.getElementById('audio-toggle-btn'); // Botón flotante (disco)
+            const audioToggleIcon = audioToggleButton.querySelector('i');
+            const recordBody = audioToggleButton.querySelector('.record-body');
+            const heroPlayButtonWrapper = document.getElementById('hero-play-btn-wrapper'); // Contenedor del botón de inicio
+            const heroPlayButton = document.getElementById('hero-play-btn'); // Botón de play inicial
+
+            let musicNotesInterval = null; // Variable para controlar el intervalo de notas
+
+            // Función para crear y animar las notas musicales
+            function createMusicNotes(originElement) {
+                const rect = originElement.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+
+                const notes = ['♪', '♬', '♫']; // Puedes añadir más caracteres o iconos
+
+                for (let i = 0; i < 3; i++) { // Crear 3 notas a la vez
+                    const note = document.createElement('span');
+                    note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                    note.classList.add('music-note');
+
+                    // Posicionar la nota en el centro del botón
+                    note.style.left = `${startX}px`;
+                    note.style.top = `${startY}px`;
+
+                    // Variables CSS personalizadas para animación aleatoria
+                    const randomX1 = (Math.random() - 0.5) * 50; // Pequeño desplazamiento inicial
+                    const randomY1 = (Math.random() - 0.5) * 50;
+                    const randomX2 = (Math.random() - 0.5) * 150; // Desplazamiento final más grande
+                    const randomY2 = (Math.random() * -100) - 50; // Siempre hacia arriba
+
+                    note.style.setProperty('--initial-x', `${randomX1}px`);
+                    note.style.setProperty('--initial-y', `${randomY1}px`);
+                    note.style.setProperty('--final-x', `${randomX2}px`);
+                    note.style.setProperty('--final-y', `${randomY2}px`);
+
+                    document.body.appendChild(note);
+
+                    // Eliminar la nota después de que termine la animación
+                    note.addEventListener('animationend', () => {
+                        note.remove();
+                    });
+                }
+            }
+
+            // Función para iniciar la animación continua de notas
+            function startContinuousNotes() {
+                if (!musicNotesInterval) { // Solo iniciar si no hay un intervalo ya activo
+                    musicNotesInterval = setInterval(() => {
+                        if (!backgroundMusic.muted && !backgroundMusic.paused) {
+                             createMusicNotes(audioToggleButton); // Crear notas desde el botón flotante
+                        } else {
+                            stopContinuousNotes(); // Si la música se muteó o pausó, detener las notas
+                        }
+                    }, 300); // Generar una nota cada 300ms
+                }
+            }
+
+            // Función para detener la animación continua de notas
+            function stopContinuousNotes() {
+                if (musicNotesInterval) {
+                    clearInterval(musicNotesInterval);
+                    musicNotesInterval = null;
+                }
+            }
+
+            // --- Lógica del Botón de Play Inicial (heroPlayButton) ---
+            if (heroPlayButton) {
+                heroPlayButton.addEventListener('click', () => {
+                    backgroundMusic.muted = false; // Desactivar el silencio
+                    backgroundMusic.play().then(() => {
+                        // Ocultar el botón de inicio
+                        heroPlayButtonWrapper.classList.add('hidden'); 
+                        // Generar notas una vez desde el botón de inicio al hacer clic
+                        createMusicNotes(heroPlayButton);
+
+                        // Actualizar el estado del botón flotante
+                        audioToggleIcon.classList.remove('fa-volume-mute');
+                        audioToggleIcon.classList.add('fa-volume-up');
+                        audioToggleButton.classList.add('playing'); // Iniciar giro del disco
+                        startContinuousNotes(); // Iniciar animación continua de notas
+                    }).catch(error => {
+                        console.log("Error al reproducir el audio con el botón de inicio:", error);
+                        // Si falla la reproducción, asegurar estado correcto del botón flotante
+                        audioToggleIcon.classList.remove('fa-volume-up');
+                        audioToggleIcon.classList.add('fa-volume-mute');
+                        audioToggleButton.classList.remove('playing'); // Detener giro
+                        stopContinuousNotes(); // Detener notas
+                    });
+                });
+            }
+
+            // --- Lógica del Botón Flotante (audioToggleButton) ---
+            audioToggleButton.addEventListener('click', () => {
+                backgroundMusic.muted = !backgroundMusic.muted; // Alternar mute/unmute
+                
+                if (backgroundMusic.muted) {
+                    audioToggleIcon.classList.remove('fa-volume-up');
+                    audioToggleIcon.classList.add('fa-volume-mute');
+                    stopContinuousNotes(); // Detener notas si se mutea
+                } else {
+                    audioToggleIcon.classList.remove('fa-volume-mute');
+                    audioToggleIcon.classList.add('fa-volume-up');
+                    // Intentar reproducir si estaba pausada, para asegurar que suene al desmutear
+                    backgroundMusic.play().catch(error => console.log("Error al reproducir audio desde el botón de volumen:", error));
+                    startContinuousNotes(); // Iniciar notas si se desmutea
+                }
+            });
+
+            // --- Sincronizar el estado visual del disco con el audio real ---
+            backgroundMusic.addEventListener('play', () => {
+                audioToggleButton.classList.add('playing'); // El disco gira siempre que la música esté reproduciéndose
+                if (!backgroundMusic.muted) {
+                    audioToggleIcon.classList.remove('fa-volume-mute');
+                    audioToggleIcon.classList.add('fa-volume-up');
+                    startContinuousNotes(); // Iniciar notas si se reproduce y no está muteada
+                }
+            });
+
+            backgroundMusic.addEventListener('pause', () => {
+                audioToggleButton.classList.remove('playing'); // Detener giro del disco
+                stopContinuousNotes(); // Detener notas si se pausa
+            });
+
+            backgroundMusic.addEventListener('volumechange', () => {
+                // Este evento se dispara cuando cambia el estado de muted
+                if (backgroundMusic.muted) {
+                    audioToggleIcon.classList.remove('fa-volume-up');
+                    audioToggleIcon.classList.add('fa-volume-mute');
+                    stopContinuousNotes(); // Detener notas si se mutea
+                } else {
+                    if (!backgroundMusic.paused) { // Si no está muteada y NO está pausada, entonces está sonando
+                        audioToggleIcon.classList.remove('fa-volume-mute');
+                        audioToggleIcon.classList.add('fa-volume-up');
+                        startContinuousNotes(); // Iniciar notas si se desmutea y está sonando
+                    } else {
+                        // Si se desmutea pero está pausada, no debe haber notas
+                        stopContinuousNotes();
+                    }
+                }
+            });
+
+            // Establecer el estado inicial de los botones y animaciones al cargar la página
+            // La música se reproduce automáticamente pero silenciada al inicio (políticas del navegador)
+            if (backgroundMusic.paused && backgroundMusic.muted) {
+                // Caso: El audio no se pudo reproducir en absoluto y está muteado.
+                audioToggleIcon.classList.remove('fa-volume-up');
+                audioToggleIcon.classList.add('fa-volume-mute');
+                audioToggleButton.classList.remove('playing'); // No gira
+                heroPlayButtonWrapper.classList.remove('hidden'); // Mostrar botón de inicio
+                stopContinuousNotes();
+            } else if (!backgroundMusic.paused && backgroundMusic.muted) {
+                // Caso: El audio se está reproduciendo pero está silenciado (lo más común en autoplay).
+                audioToggleIcon.classList.remove('fa-volume-up');
+                audioToggleIcon.classList.add('fa-volume-mute');
+                audioToggleButton.classList.add('playing'); // El disco gira (la música está "en marcha")
+                heroPlayButtonWrapper.classList.remove('hidden'); // Mostrar botón de inicio para desmutear
+                stopContinuousNotes(); // No hay notas si está muteado
+            } else if (!backgroundMusic.paused && !backgroundMusic.muted) {
+                 // Caso: El audio se está reproduciendo y NO está silenciado (rara vez en carga inicial sin interacción).
+                audioToggleIcon.classList.remove('fa-volume-mute');
+                audioToggleIcon.classList.add('fa-volume-up');
+                audioToggleButton.classList.add('playing'); // Gira
+                heroPlayButtonWrapper.classList.add('hidden'); // Ocultar botón de inicio
+                startContinuousNotes(); // Iniciar notas
+            }
+        });
+    </script>
+</body>
+</html>
