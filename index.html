@@ -11,6 +11,18 @@
     <!-- Google Fonts - Inter para una fuente moderna y legible -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Global Reset and Box-Sizing */
+        html, body {
+            width: 100%;
+            height: 100%; /* Ensure body takes full height for mobile scroll calculations */
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Ensure no horizontal scroll is ever caused by content */
+        }
+        *, *::before, *::after {
+            box-sizing: border-box; /* Crucial for consistent layout with padding/borders */
+        }
+
         /* Estilos personalizados para la paleta de colores y fuentes */
         :root {
             --color-primary-bg: #FDFBF6; /* Marfil muy claro */
@@ -25,7 +37,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--color-primary-bg);
             color: var(--color-text-dark);
-            overflow-x: hidden; /* Prevenir scroll horizontal */
+            /* overflow-x: hidden; already moved to html,body */
         }
 
         h1, h2, h3, h4 {
@@ -90,12 +102,7 @@
         .modal.open {
             opacity: 1;
             pointer-events: auto; /* Permite la interacción cuando está abierto */
-            /* Se ha quitado `overflow: hidden` de aquí para no afectar el body directamente */
         }
-        /* Clase para evitar el scroll del body cuando un modal está abierto (esta clase se removerá del JS) */
-        /* body.modal-open {
-            overflow: hidden;
-        } */
 
         .modal-content {
             margin: auto;
@@ -370,7 +377,7 @@
         /* Regla para desktop para forzar 4 columnas y asegurar el centrado en #dressCodeModal .dress-code-grid */
         @media (min-width: 768px) {
             #dressCodeModal .dress-code-grid {
-                grid-template-columns: repeat(5, 1fr); /* Fuerza 4 columnas para distribuir el espacio uniformemente */
+                grid-template-columns: repeat(4, 1fr); /* Fuerza 4 columnas para distribuir el espacio uniformemente */
                 justify-content: center; /* Centra las pistas de la cuadrícula si el espacio no se llena */
             }
         }
@@ -435,15 +442,6 @@
                 transition-delay: 0s; /* Sin delay al mostrar */
             }
 
-            /* Desplazamiento del contenido principal cuando el menú está abierto - SE HA REMOVIDO */
-            /* #main-content-wrapper {
-                transition: transform 0.3s ease-in-out; 
-            }
-
-            #main-content-wrapper.content-shifted {
-                transform: translateX(calc(-1 * min(80vw, 300px))); 
-            } */
-
             #main-nav a {
                 display: block; /* Cada enlace ocupa su propia línea */
                 width: 100%; /* Ocupa el ancho completo del menú */
@@ -483,8 +481,8 @@
     <div id="mobile-menu-overlay"></div>
 
     <!-- Navegación Fija -->
-    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-90 shadow-md z-50 py-4 px-6 md:px-12 rounded-b-lg">
-        <div class="container mx-auto flex justify-between items-center flex-wrap">
+    <header class="fixed top-0 left-0 w-full bg-white bg-opacity-90 shadow-md z-50 py-4 rounded-b-lg">
+        <div class="container mx-auto flex justify-between items-center flex-wrap px-6 md:px-12">
             <!-- Título/Logo para la barra de navegación -->
             <a href="#hero" class="text-2xl font-bold text-amber-700 font-playfair-display">A&A</a>
 
@@ -513,7 +511,7 @@
         </div>
     </header>
 
-    <!-- Contenedor principal para el contenido desplazable (Se ha quitado la lógica de desplazamiento del JS) -->
+    <!-- Contenedor principal para el contenido -->
     <div id="main-content-wrapper">
         <!-- Sección de Portada/Héroe -->
         <section id="hero" class="relative h-screen flex items-center justify-center text-center parallax-bg" 
@@ -728,23 +726,19 @@
                 <p class="text-stone-600 mb-4 col-span-full">Aquí algunos ejemplos de estilos y colores apropiados:</p>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/DDC8A9/3A3A3A?text=Vestido+Largo+Pastel" alt="Vestido Largo Pastel" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Vestido Largo</p>
+                    <p class="text-sm text-stone-600 mt-2">Vestido Largo (Tonos Pastel)</p>
                 </div>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/B48C5C/3A3A3A?text=Vestido+Midi+Elegante" alt="Vestido Midi Elegante" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Vestido Midi</p>
+                    <p class="text-sm text-stone-600 mt-2">Vestido Midi Elegante</p>
                 </div>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/EDE9E0/3A3A3A?text=Traje+Dos+Piezas" alt="Traje de Dos Piezas Sofisticado" width="400" height="300" loading="lazy">
                     <p class="text-sm text-stone-600 mt-2">Traje de Dos Piezas</p>
                 </div>
                 <div class="text-center">
-                    <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Colores Claros</p>
-                </div>
-		<div class="text-center">
-                    <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Suave" alt="Color Suave" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Colores Suaves</p>
+                    <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro Suave" width="400" height="300" loading="lazy">
+                    <p class="text-sm text-stone-600 mt-2">Colores Claros / Suaves</p>
                 </div>
             </div>
         </div>
@@ -1299,7 +1293,6 @@
                 modalElement.style.display = 'flex'; // Asegura que el contenedor del modal esté visible
                 setTimeout(() => {
                     modalElement.classList.add('open'); // Activa la transición de opacidad
-                    // Se ha quitado `document.body.classList.add('modal-open');`
                 }, 10); // Pequeño retraso para asegurar que `display` se aplique antes de `opacity`
             }
 
@@ -1311,7 +1304,6 @@
                 modalElement.addEventListener('transitionend', function handler(e) {
                     if (e.propertyName === 'opacity' && !modalElement.classList.contains('open')) {
                         modalElement.style.display = 'none'; // Oculta el modal completamente
-                        // Se ha quitado `document.body.classList.remove('modal-open');`
                         modalElement.removeEventListener('transitionend', handler); // Limpia el listener
                     }
                 }, {once: true}); // `once: true` asegura que el listener se elimine después de una ejecución
@@ -1319,7 +1311,6 @@
                 setTimeout(() => {
                     if (!modalElement.classList.contains('open')) {
                         modalElement.style.display = 'none';
-                        // Se ha quitado `document.body.classList.remove('modal-open');`
                     }
                 }, 350); // Un poco más largo que la duración de la transición CSS (0.3s)
             }
@@ -1390,13 +1381,12 @@
             // --- JavaScript para el Menú de Navegación Móvil (Hamburguesa Lateral) ---
             const menuToggle = document.getElementById('menu-toggle');
             const mainNav = document.getElementById('main-nav');
-            const mainContentWrapper = document.getElementById('main-content-wrapper'); // Contenedor del contenido principal
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay'); // Overlay para oscurecer el fondo
             const menuToggleIcon = menuToggle.querySelector('i'); // Icono del botón de hamburguesa
 
             function openMobileMenu() {
                 mainNav.classList.add('menu-open');
-                mainContentWrapper.classList.add('content-shifted');
+                mobileMenuOverlay.classList.add('overlay-active');
                 menuToggleIcon.classList.remove('fa-bars');
                 menuToggleIcon.classList.add('fa-times'); // Cambia a icono de 'X'
                 document.body.style.overflow = 'hidden'; // Evita el scroll en el body
@@ -1404,14 +1394,13 @@
 
             function closeMobileMenu() {
                 mainNav.classList.remove('menu-open');
-                mainContentWrapper.classList.remove('content-shifted');
                 mobileMenuOverlay.classList.remove('overlay-active');
                 menuToggleIcon.classList.remove('fa-times');
                 menuToggleIcon.classList.add('fa-bars'); // Vuelve al icono de hamburguesa
                 document.body.style.overflow = ''; // Restaura el scroll en el body
             }
 
-            if (menuToggle && mainNav && mainContentWrapper && mobileMenuOverlay) {
+            if (menuToggle && mainNav && mobileMenuOverlay) {
                 menuToggle.addEventListener('click', () => {
                     if (mainNav.classList.contains('menu-open')) {
                         closeMobileMenu();
@@ -1438,11 +1427,10 @@
                 // Maneja el cambio de tamaño de la ventana (responsive)
                 window.addEventListener('resize', () => {
                     if (window.innerWidth >= 768) {
-                        // Si es desktop, asegúrate de que el menú esté oculto y la página sin desplazar
+                        // Si es desktop, asegúrate de que el menú móvil esté cerrado y la página sin desplazar
                         closeMobileMenu(); // Cierra el menú móvil
                         mainNav.classList.remove('hidden'); // Asegura que la navegación de escritorio sea visible
-                        mainNav.style.transform = ''; // Limpia cualquier transformación del menú
-                        mainContentWrapper.style.transform = ''; // Limpia cualquier transformación del contenido
+                        mainNav.style.transform = ''; // Limpia cualquier transformación del menú móvil
                     } else {
                         // Si es móvil, y el menú no está abierto, asegúrate de que esté oculto
                         if (!mainNav.classList.contains('menu-open')) {
