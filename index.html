@@ -72,7 +72,7 @@
         .modal {
             display: none; /* Oculto por defecto, JS controlará display: flex */
             position: fixed;
-            z-index: 1000; /* Asegura que esté por encima del contenido principal, pero debajo del menú lateral */
+            z-index: 1000; /* Asegura que esté por encima del contenido principal, y el overlay del menú si está cerrado */
             left: 0;
             top: 0;
             width: 100%;
@@ -90,7 +90,12 @@
         .modal.open {
             opacity: 1;
             pointer-events: auto; /* Permite la interacción cuando está abierto */
+            /* Se ha quitado `overflow: hidden` de aquí para no afectar el body directamente */
         }
+        /* Clase para evitar el scroll del body cuando un modal está abierto (esta clase se removerá del JS) */
+        /* body.modal-open {
+            overflow: hidden;
+        } */
 
         .modal-content {
             margin: auto;
@@ -144,7 +149,7 @@
             right: 32px;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-            z-index: 50;
+            z-index: 50; /* Z-index para el botón flotante de audio */
             transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
             opacity: 0; /* JS controla si es visible */
             pointer-events: none; /* JS controla si es interactuable */
@@ -192,7 +197,7 @@
             opacity: 0;
             transform: translate(0, 0);
             animation: flyUpAndFade 2s ease-out forwards;
-            z-index: 51;
+            z-index: 51; /* Z-index para las notas musicales, ligeramente superior al botón */
             pointer-events: none; /* Asegura que las notas no bloqueen clics */
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
@@ -348,7 +353,6 @@
         /* Estilos específicos para el modal de Dress Code */
         #dressCodeModal .dress-code-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 1rem;
             padding: 1rem;
             max-width: 800px; /* Asegura un ancho máximo */
@@ -362,6 +366,13 @@
             /* Centrado de tarjetas en PC */
             justify-items: center; /* Centra los items del grid dentro de sus celdas */
             align-items: center; /* Centra los items verticalmente en sus celdas */
+        }
+        /* Regla para desktop para forzar 4 columnas y asegurar el centrado en #dressCodeModal .dress-code-grid */
+        @media (min-width: 768px) {
+            #dressCodeModal .dress-code-grid {
+                grid-template-columns: repeat(5, 1fr); /* Fuerza 4 columnas para distribuir el espacio uniformemente */
+                justify-content: center; /* Centra las pistas de la cuadrícula si el espacio no se llena */
+            }
         }
 
         #dressCodeModal .dress-code-grid img {
@@ -392,7 +403,7 @@
                 max-width: 300px; /* Ancho máximo para pantallas más grandes */
                 background-color: var(--color-primary-bg); /* Fondo del menú */
                 box-shadow: -4px 0 10px rgba(0,0,0,0.2); /* Sombra para efecto 3D */
-                z-index: 1001; /* Z-index superior al modal (1000) */
+                z-index: 1002; /* Z-index superior a los modales (1000) y al overlay (999) */
                 transform: translateX(100%); /* Inicialmente fuera de la pantalla a la derecha */
                 transition: transform 0.3s ease-in-out; /* Transición suave para el deslizamiento */
                 flex-direction: column; /* Apilar enlaces verticalmente */
@@ -412,7 +423,7 @@
                 position: fixed;
                 inset: 0;
                 background-color: rgba(0,0,0,0.5);
-                z-index: 890; /* Entre el menú (1001) y el contenido (normal) */
+                z-index: 999; /* Z-index entre el menú (1002) y los modales (1000) */
                 opacity: 0;
                 visibility: hidden; /* Oculto e ininteractuable */
                 transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s; /* Delay para ocultar */
@@ -424,15 +435,14 @@
                 transition-delay: 0s; /* Sin delay al mostrar */
             }
 
-            /* Desplazamiento del contenido principal cuando el menú está abierto */
-            #main-content-wrapper {
-                transition: transform 0.3s ease-in-out; /* Transición para el desplazamiento */
+            /* Desplazamiento del contenido principal cuando el menú está abierto - SE HA REMOVIDO */
+            /* #main-content-wrapper {
+                transition: transform 0.3s ease-in-out; 
             }
 
             #main-content-wrapper.content-shifted {
-                /* Calcular el desplazamiento basado en el ancho máximo del menú */
-                transform: translateX(calc(-1 * min(80vw, 300px))); /* Desplazar a la izquierda */
-            }
+                transform: translateX(calc(-1 * min(80vw, 300px))); 
+            } */
 
             #main-nav a {
                 display: block; /* Cada enlace ocupa su propia línea */
@@ -448,6 +458,11 @@
             }
         }
         /* Para pantallas >= 768px, las clases md:flex en #main-nav se encargarán de la visibilidad y el layout normal */
+
+        /* Cursor de mano para el icono de información de Dress Code */
+        #female-dress-code {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -498,7 +513,7 @@
         </div>
     </header>
 
-    <!-- Contenedor principal para el contenido desplazable -->
+    <!-- Contenedor principal para el contenido desplazable (Se ha quitado la lógica de desplazamiento del JS) -->
     <div id="main-content-wrapper">
         <!-- Sección de Portada/Héroe -->
         <section id="hero" class="relative h-screen flex items-center justify-center text-center parallax-bg" 
@@ -713,21 +728,21 @@
                 <p class="text-stone-600 mb-4 col-span-full">Aquí algunos ejemplos de estilos y colores apropiados:</p>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/DDC8A9/3A3A3A?text=Vestido+Largo+Pastel" alt="Vestido Largo Pastel" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Vestido Largo (Tonos Pastel)</p>
+                    <p class="text-sm text-stone-600 mt-2">Vestido Largo</p>
                 </div>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/B48C5C/3A3A3A?text=Vestido+Midi+Elegante" alt="Vestido Midi Elegante" width="400" height="300" loading="lazy">
-                    <p class="text-sm text-stone-600 mt-2">Vestido Midi Elegante</p>
+                    <p class="text-sm text-stone-600 mt-2">Vestido Midi</p>
                 </div>
                 <div class="text-center">
                     <img src="https://placehold.co/400x300/EDE9E0/3A3A3A?text=Traje+Dos+Piezas" alt="Traje de Dos Piezas Sofisticado" width="400" height="300" loading="lazy">
                     <p class="text-sm text-stone-600 mt-2">Traje de Dos Piezas</p>
                 </div>
                 <div class="text-center">
-                    <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro" alt="Color Claro" width="400" height="300" loading="lazy">
+                    <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro" width="400" height="300" loading="lazy">
                     <p class="text-sm text-stone-600 mt-2">Colores Claros</p>
                 </div>
-                <div class="text-center">
+		<div class="text-center">
                     <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Suave" alt="Color Suave" width="400" height="300" loading="lazy">
                     <p class="text-sm text-stone-600 mt-2">Colores Suaves</p>
                 </div>
@@ -1284,7 +1299,7 @@
                 modalElement.style.display = 'flex'; // Asegura que el contenedor del modal esté visible
                 setTimeout(() => {
                     modalElement.classList.add('open'); // Activa la transición de opacidad
-                    document.body.style.overflow = 'hidden'; // Evita el scroll del fondo
+                    // Se ha quitado `document.body.classList.add('modal-open');`
                 }, 10); // Pequeño retraso para asegurar que `display` se aplique antes de `opacity`
             }
 
@@ -1296,7 +1311,7 @@
                 modalElement.addEventListener('transitionend', function handler(e) {
                     if (e.propertyName === 'opacity' && !modalElement.classList.contains('open')) {
                         modalElement.style.display = 'none'; // Oculta el modal completamente
-                        document.body.style.overflow = ''; // Restaura el scroll del cuerpo
+                        // Se ha quitado `document.body.classList.remove('modal-open');`
                         modalElement.removeEventListener('transitionend', handler); // Limpia el listener
                     }
                 }, {once: true}); // `once: true` asegura que el listener se elimine después de una ejecución
@@ -1304,7 +1319,7 @@
                 setTimeout(() => {
                     if (!modalElement.classList.contains('open')) {
                         modalElement.style.display = 'none';
-                        document.body.style.overflow = '';
+                        // Se ha quitado `document.body.classList.remove('modal-open');`
                     }
                 }, 350); // Un poco más largo que la duración de la transición CSS (0.3s)
             }
@@ -1356,9 +1371,7 @@
             }
 
             if (femaleDressCodeTrigger && dressCodeModal && closeDressCodeModalBtn) {
-                // Añade cursor: pointer al trigger
-                femaleDressCodeTrigger.style.cursor = 'pointer';
-
+                // El cursor: pointer ya se maneja en CSS directamente para un mejor rendimiento y coherencia.
                 femaleDressCodeTrigger.addEventListener('click', () => {
                     openModal(dressCodeModal);
                 });
@@ -1384,7 +1397,6 @@
             function openMobileMenu() {
                 mainNav.classList.add('menu-open');
                 mainContentWrapper.classList.add('content-shifted');
-                mobileMenuOverlay.classList.add('overlay-active');
                 menuToggleIcon.classList.remove('fa-bars');
                 menuToggleIcon.classList.add('fa-times'); // Cambia a icono de 'X'
                 document.body.style.overflow = 'hidden'; // Evita el scroll en el body
