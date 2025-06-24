@@ -111,88 +111,83 @@
 
         /* --- Estilos del Botón de Audio "Disco de Acetato" Flotante --- */
         #audio-toggle-btn {
-            width: 80px; /* Tamaño del disco */
+            width: 80px;
             height: 80px;
-            border-radius: 50%; /* Hacerlo circular */
-            background-color: #222; /* Color oscuro del vinilo */
-            border: 3px solid var(--color-soft-accent); /* Borde dorado para simular el anillo */
+            border-radius: 50%;
+            background-color: #222;
+            border: 3px solid var(--color-soft-accent);
             display: flex;
             align-items: center;
             justify-content: center;
             position: fixed;
-            bottom: 48px; /* Posición vertical */
-            right: 32px; /* Posición horizontal */
+            bottom: 48px;
+            right: 32px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5); /* Sombra más pronunciada */
-            z-index: 50; /* Asegurarse de que esté encima de otros elementos */
-            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease; /* Añadir transición para la opacidad */
-            opacity: 0; /* Ocultar por defecto */
-            pointer-events: none; /* No interactuable cuando está oculto */
-            transform-origin: center center; /* Para la rotación */
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            z-index: 50;
+            transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            transform-origin: center center;
         }
         #audio-toggle-btn.visible {
-            opacity: 1; /* Hacer visible */
-            pointer-events: auto; /* Hacer interactuable */
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        /* Círculo central que simula la etiqueta del disco */
         #audio-toggle-btn::before {
             content: '';
             position: absolute;
-            width: 30px; /* Tamaño del centro */
+            width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: var(--color-accent); /* Color dorado de la etiqueta */
-            border: 2px solid white; /* Punto blanco central */
-            z-index: 1; /* Por encima del fondo oscuro del disco */
+            background-color: var(--color-accent);
+            border: 2px solid white;
+            z-index: 1;
         }
 
-        /* Icono de Volumen (mute/unmute) */
         #audio-toggle-btn i {
             position: relative;
-            z-index: 2; /* Por encima de la etiqueta central */
-            color: white; /* Color del icono */
-            font-size: 28px; /* Tamaño del icono */
+            z-index: 2;
+            color: white;
+            font-size: 28px;
             transition: transform 0.3s ease;
         }
 
-        /* Animación de giro para el disco cuando está sonando */
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        /* Aplicar la animación al botón principal cuando la música está sonando */
         #audio-toggle-btn.playing .record-body {
-            animation: spin 2s linear infinite; /* Animación de giro más rápida */
+            animation: spin 2s linear infinite;
         }
 
         /* --- Estilos para las Notas Musicales Flotantes --- */
         .music-note {
-            position: fixed; /* Fijo en la ventana */
-            color: var(--color-accent); /* Color dorado para las notas */
-            font-size: 24px; /* Tamaño de las notas */
-            opacity: 0; /* Empieza invisible */
-            transform: translate(0, 0); /* Posición inicial */
-            animation: flyUpAndFade 2s ease-out forwards; /* Duración de la animación */
-            z-index: 51; /* Por encima del botón */
-            pointer-events: none; /* No interactuable con el ratón */
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Pequeño brillo */
+            position: fixed;
+            color: var(--color-accent);
+            font-size: 24px;
+            opacity: 0;
+            transform: translate(0, 0);
+            animation: flyUpAndFade 2s ease-out forwards;
+            z-index: 51;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
-        /* Animación de las notas: suben y se desvanecen con movimiento aleatorio */
         @keyframes flyUpAndFade {
             0% {
                 opacity: 0;
-                transform: translate(0, 0) scale(0.5); /* Empieza pequeña y sin opacidad */
+                transform: translate(0, 0) scale(0.5);
             }
             20% {
                 opacity: 1;
-                transform: translate(var(--initial-x), var(--initial-y)) scale(1); /* Aparece y se mueve un poco */
+                transform: translate(var(--initial-x), var(--initial-y)) scale(1);
             }
             100% {
                 opacity: 0;
-                transform: translate(var(--final-x), var(--final-y)) scale(1.5); /* Se mueve hacia arriba/afuera y se agranda, desvaneciéndose */
+                transform: translate(var(--final-x), var(--final-y)) scale(1.5);
             }
         }
 
@@ -202,17 +197,16 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background-color: #666; /* Un gris medio para que se noten las pistas */
-            /* Simular las pistas del vinilo con box-shadows */
+            background-color: #666;
             box-shadow:
-                inset 0 0 0 1px rgba(255,255,255,0.1), /* Borde interior del vinilo */
-                inset 0 0 0 5px rgba(255,255,255,0.05), /* Pista 1 */
-                inset 0 0 0 10px rgba(255,255,255,0.1), /* Pista 2 */
-                inset 0 0 0 15px rgba(255,255,255,0.15), /* Pista 3 */
-                inset 0 0 0 20px rgba(255,255,255,0.2), /* Pista 4 */
-                inset 0 0 0 25px rgba(255,255,255,0.25), /* Pista 5 */
-                inset 0 0 0 30px rgba(255,255,255,0.3); /* Pista 6 */
-            z-index: 0; /* Detrás del icono y la etiqueta */
+                inset 0 0 0 1px rgba(255,255,255,0.1),
+                inset 0 0 0 5px rgba(255,255,255,0.05),
+                inset 0 0 0 10px rgba(255,255,255,0.1),
+                inset 0 0 0 15px rgba(255,255,255,0.15),
+                inset 0 0 0 20px rgba(255,255,255,0.2),
+                inset 0 0 0 25px rgba(255,255,255,0.25),
+                inset 0 0 0 30px rgba(255,255,255,0.3);
+            z-index: 0;
         }
 
         /* Estilo para el botón de play inicial */
@@ -447,8 +441,8 @@
 
     <!-- Botón para controlar el audio (Disco de Acetato flotante) -->
     <button id="audio-toggle-btn" class="fixed bottom-48 right-8">
-        <div class="record-body"></div> <!-- Esta es la parte que girará -->
-        <i class="fas fa-volume-up"></i> <!-- Icono de Volumen (mute/unmute) -->
+        <div class="record-body"></div>
+        <i class="fas fa-volume-up"></i>
     </button>
 
     <!-- Navegación Fija -->
@@ -553,7 +547,7 @@
                         <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-4 md:border-r-0 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">El Primer Encuentro</h3>
                             <p class="text-stone-600 mb-4">"Todo comenzó en 2018, en una tarde lluviosa en la universidad. Un cruce de miradas, una conversación accidental, y el inicio de algo mágico."</p>
-                            <img src="https://cdn.pixabay.com/photo/2017/08/06/18/05/people-2594745_640.jpg" alt="Primer Encuentro" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primer+Encuentro" alt="Primer Encuentro" class="w-full h-auto rounded-md object-cover my-4 shadow-md" width="400" height="300" loading="lazy">
                             <span class="text-sm text-stone-500">Junio 2018</span>
                         </div>
                     </div>
@@ -564,7 +558,7 @@
                         <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-0 md:border-r-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">Nuestra Primera Cita</h3>
                             <p class="text-stone-600 mb-4">"Una cena improvisada que se convirtió en horas de risas y conversaciones profundas. Supimos que esto era diferente."</p>
-                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primera+Cita" alt="Primera Cita" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Primera+Cita" alt="Primera Cita" class="w-full h-auto rounded-md object-cover my-4 shadow-md" width="400" height="300" loading="lazy">
                             <span class="text-sm text-stone-500">Septiembre 2018</span>
                         </div>
                     </div>
@@ -575,7 +569,7 @@
                         <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-4 md:border-r-0 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">El Viaje que lo Cambió Todo</h3>
                             <p class="text-stone-600 mb-4">"Un viaje inolvidable a la playa, donde cada atardecer nos confirmaba que estábamos hechos el uno para el otro."</p>
-                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Viaje+Inolvidable" alt="Viaje Inolvidable" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Viaje+Inolvidable" alt="Viaje Inolvidable" class="w-full h-auto rounded-md object-cover my-4 shadow-md" width="400" height="300" loading="lazy">
                             <span class="text-sm text-stone-500">Mayo 2020</span>
                         </div>
                     </div>
@@ -586,7 +580,7 @@
                         <div class="bg-white p-6 rounded-lg shadow-xl border-t-4 md:border-t-4 md:border-l-0 md:border-r-4 border-amber-500 transform transition-transform duration-500 hover:scale-105 animate-on-scroll">
                             <h3 class="text-3xl font-semibold mb-3">La Propuesta Soñada</h3>
                             <p class="text-stone-600 mb-4">"Bajo las estrellas, en nuestro lugar favorito, la pregunta que selló nuestro futuro. ¡Dije que sí!"</p>
-                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Propuesta+de+Matrimonio" alt="Propuesta de Matrimonio" class="w-full h-auto rounded-md object-cover my-4 shadow-md">
+                            <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Propuesta+de+Matrimonio" alt="Propuesta de Matrimonio" class="w-full h-auto rounded-md object-cover my-4 shadow-md" width="400" height="300" loading="lazy">
                             <span class="text-sm text-stone-500">Septiembre 2023</span>
                         </div>
                     </div>
@@ -601,43 +595,43 @@
             <h2 class="text-5xl font-bold mb-12 text-amber-700">Nuestra Galería</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Foto 1 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://st4.depositphotos.com/2727515/21545/i/450/depositphotos_215458224-stock-photo-young-cute-couple-kissing-urban.jpg">
-                    <img src="https://st4.depositphotos.com/2727515/21545/i/450/depositphotos_215458224-stock-photo-young-cute-couple-kissing-urban.jpg" alt="Pareja Sonriendo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Pareja+Sonriendo">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Pareja+Sonriendo" alt="Pareja Sonriendo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
                 </div>
                 <!-- Foto 2 -->
-                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://cdn0.matrimonio.com.co/article-vendor-o/9115/3_2/960/jpg/anastasiascott-83_10_109115.jpeg">
-                    <img src="https://cdn0.matrimonio.com.co/article-vendor-o/9115/3_2/960/jpg/anastasiascott-83_10_109115.jpeg" alt="Abrazo Cariñoso" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Abrazo+Cariñoso">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Abrazo+Cariñoso" alt="Abrazo Cariñoso" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
                 </div>
                 <!-- Foto 3 -->
                 <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Beso+Apasionado">
-                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Beso+Apasionado" alt="Beso Apasionado" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Beso+Apasionado" alt="Beso Apasionado" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
                 </div>
                 <!-- Foto 4 -->
                 <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Mano+con+Anillo">
-                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Mano+con+Anillo" alt="Mano con Anillo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Mano+con+Anillo" alt="Mano con Anillo" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
                 </div>
                 <!-- Foto 5 -->
                 <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Risas+Juntos">
-                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Risas+Juntos" alt="Risas Juntos" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Risas+Juntos" alt="Risas Juntos" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
                 </div>
                 <!-- Foto 6 -->
                 <div class="group relative overflow-hidden rounded-lg shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105 animate-on-scroll" data-src="https://placehold.co/800x600/EDE9E0/B48C5C?text=Atardecer+Romántico">
-                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Atardecer+Romántico" alt="Atardecer Romántico" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <img src="https://placehold.co/400x300/EDE9E0/B48C5C?text=Atardecer+Romántico" alt="Atardecer Romántico" class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80" width="400" height="300" loading="lazy">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <i class="fas fa-search-plus text-white text-3xl"></i>
                     </div>
@@ -715,19 +709,19 @@
             <h3 class="text-3xl font-semibold text-amber-700 mb-4 col-span-full">Sugerencias para Damas</h3>
             <p class="text-stone-600 mb-4 col-span-full">Aquí algunos ejemplos de estilos y colores apropiados:</p>
             <div class="text-center">
-                <img src="https://placehold.co/400x300/DDC8A9/3A3A3A?text=Vestido+Largo+Pastel" alt="Vestido Largo Pastel">
+                <img src="https://placehold.co/400x300/DDC8A9/3A3A3A?text=Vestido+Largo+Pastel" alt="Vestido Largo Pastel" width="400" height="300" loading="lazy">
                 <p class="text-sm text-stone-600 mt-2">Vestido Largo (Tonos Pastel)</p>
             </div>
             <div class="text-center">
-                <img src="https://placehold.co/400x300/B48C5C/3A3A3A?text=Vestido+Midi+Elegante" alt="Vestido Midi Elegante">
+                <img src="https://placehold.co/400x300/B48C5C/3A3A3A?text=Vestido+Midi+Elegante" alt="Vestido Midi Elegante" width="400" height="300" loading="lazy">
                 <p class="text-sm text-stone-600 mt-2">Vestido Midi Elegante</p>
             </div>
             <div class="text-center">
-                <img src="https://placehold.co/400x300/EDE9E0/3A3A3A?text=Traje+Dos+Piezas" alt="Traje de Dos Piezas Sofisticado">
+                <img src="https://placehold.co/400x300/EDE9E0/3A3A3A?text=Traje+Dos+Piezas" alt="Traje de Dos Piezas Sofisticado" width="400" height="300" loading="lazy">
                 <p class="text-sm text-stone-600 mt-2">Traje de Dos Piezas</p>
             </div>
             <div class="text-center">
-                <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro Suave">
+                <img src="https://placehold.co/400x300/FDFBF6/3A3A3A?text=Color+Claro+Suave" alt="Color Claro Suave" width="400" height="300" loading="lazy">
                 <p class="text-sm text-stone-600 mt-2">Colores Claros / Suaves</p>
             </div>
         </div>
@@ -812,7 +806,7 @@
                     </p>
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
-                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Abrir Ruta en Google Maps
@@ -832,7 +826,7 @@
                     </ul>
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
-                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Abrir Ubicación en Google Maps
@@ -855,7 +849,7 @@
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 1234 5678</p>
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
-                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <a href="https://maps.app.goo.gl/TUwR1y3ZzXjK9L456" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
@@ -868,7 +862,7 @@
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 9876 5432</p>
                      <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
-                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
@@ -881,7 +875,7 @@
                     <p class="text-stone-600 mb-4"><i class="fas fa-phone mr-2"></i>+52 55 2345 6789</p>
                      <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.696773998782!2d-99.1685458!3d19.4326077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f6d6c34b%3A0xfc631c51b7c1a2e9!2sAngel%20de%20la%20Independencia!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx" 
-                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-md mb-4">
+                        width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <a href="https://maps.app.goo.gl/hFgJ7PqR2yX6Z1w89" target="_blank" class="inline-block bg-amber-700 text-white px-6 py-3 rounded-full hover:bg-amber-800 transition-colors duration-300 shadow-md">
                         <i class="fas fa-map-marker-alt mr-2"></i>Abrir en Google Maps
@@ -962,7 +956,7 @@
                 <div class="md:w-1/2">
                     <h3 class="text-3xl font-semibold mb-4 text-amber-700">Filtro de Instagram</h3>
                     <p class="text-stone-600 mb-4">Busca nuestro filtro personalizado en Instagram o escanéa el código QR:</p>
-                    <img src="https://placehold.co/200x200/EDE9E0/B48C5C?text=Código+QR+Filtro" alt="Código QR Filtro de Instagram" class="mx-auto w-48 h-48 rounded-md mb-4 shadow-md">
+                    <img src="https://placehold.co/200x200/EDE9E0/B48C5C?text=Código+QR+Filtro" alt="Código QR Filtro de Instagram" class="mx-auto w-48 h-48 rounded-md mb-4 shadow-md" width="200" height="200" loading="lazy">
                     <p class="text-sm text-stone-500">¡Pronto disponible en Instagram!</p>
                 </div>
                 <div class="md:w-1/2 border-t md:border-t-0 md:border-l border-stone-200 md:pl-8 pt-8 md:pt-0">
@@ -1034,331 +1028,410 @@
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Mostrar el resultado en los elementos
-            document.getElementById("days").innerHTML = String(days).padStart(2, '0');
-            document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
-            document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
+            const daysEl = document.getElementById("days");
+            const hoursEl = document.getElementById("hours");
+            const minutesEl = document.getElementById("minutes");
+            const secondsEl = document.getElementById("seconds");
+            const countdownEl = document.getElementById("countdown");
 
-            // Si la cuenta atrás ha terminado
-            if (distance < 0) {
+            if (daysEl && hoursEl && minutesEl && secondsEl && countdownEl) {
+                daysEl.innerHTML = String(days).padStart(2, '0');
+                hoursEl.innerHTML = String(hours).padStart(2, '0');
+                minutesEl.innerHTML = String(minutes).padStart(2, '0');
+                secondsEl.innerHTML = String(seconds).padStart(2, '0');
+
+                // Si la cuenta atrás ha terminado
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownEl.innerHTML = "<p class='text-4xl text-amber-500'>¡Ya nos casamos!</p>";
+                }
+            } else {
+                console.warn("Countdown elements not found, stopping countdown update.");
                 clearInterval(countdownInterval);
-                document.getElementById("countdown").innerHTML = "<p class='text-4xl text-amber-500'>¡Ya nos casamos!</p>";
             }
         }, 1000);
 
         // Envuelve la lógica principal en DOMContentLoaded para asegurar que el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
-            // ** Funcionalidad de Animación al Hacer Scroll (Intersection Observer) **
-            const animatedElements = document.querySelectorAll(
-                '#nuestra-historia .animate-on-scroll, ' +
-                '#galeria .animate-on-scroll, ' +
-                '#detalles .animate-on-scroll, ' +
-                '#dress-code .animate-on-scroll, ' +
-                '#itinerario .animate-on-scroll, ' +
-                '#como-llegar .animate-on-scroll, ' +
-                '#hospedaje .animate-on-scroll, ' +
-                '#regalos .animate-on-scroll, ' +
-                '#confirmacion .animate-on-scroll, ' +
-                '#filtro .animate-on-scroll, ' +
-                '#faqs .animate-on-scroll'
-            );
-            
-            const observerOptions = {
-                root: null, // El viewport es el root
-                rootMargin: '0px',
-                threshold: 0.1 // Cuando el 10% del elemento es visible
-            };
+            console.log("DOMContentLoaded event fired. Initializing interactive elements.");
 
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, observerOptions);
+            try {
+                // ** Funcionalidad de Animación al Hacer Scroll (Intersection Observer) **
+                const animatedElements = document.querySelectorAll(
+                    '#nuestra-historia .animate-on-scroll, ' +
+                    '#galeria .animate-on-scroll, ' +
+                    '#detalles .animate-on-scroll, ' +
+                    '#dress-code .animate-on-scroll, ' +
+                    '#itinerario .animate-on-scroll, ' +
+                    '#como-llegar .animate-on-scroll, ' +
+                    '#hospedaje .animate-on-scroll, ' +
+                    '#regalos .animate-on-scroll, ' +
+                    '#confirmacion .animate-on-scroll, ' +
+                    '#filtro .animate-on-scroll, ' +
+                    '#faqs .animate-on-scroll'
+                );
+                
+                const observerOptions = {
+                    root: null, // El viewport es el root
+                    rootMargin: '0px',
+                    threshold: 0.1 // Cuando el 10% del elemento es visible
+                };
 
-            animatedElements.forEach(element => {
-                element.classList.add('animate-on-scroll');
-                observer.observe(element);
-            });
-
-            // ** Smooth Scroll para la Navegación (para enlaces dentro del menú normal) **
-            document.querySelectorAll('header nav a').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-
-            // ** Funcionalidad de la Galería de Fotos (Modal Simple) **
-            const galleryImages = document.querySelectorAll('#galeria .group');
-            const modal = document.getElementById('galleryModal');
-            const modalImg = document.getElementById('imgModal');
-            const closeBtn = document.querySelector('.modal-close');
-
-            galleryImages.forEach(imageWrapper => {
-                imageWrapper.addEventListener('click', function() {
-                    modal.style.display = 'flex';
-                    setTimeout(() => modal.style.opacity = '1', 10);
-                    modalImg.src = this.getAttribute('data-src');
-                });
-            });
-
-            closeBtn.addEventListener('click', function() {
-                modal.style.opacity = '0';
-                setTimeout(() => modal.style.display = 'none', 300);
-            });
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.style.opacity = '0';
-                    setTimeout(() => modal.style.display = 'none', 300);
-                }
-            });
-
-            // ** Funcionalidad de Copiar al Portapapeles **
-            window.copyToClipboard = function(text) {
-                const tempInput = document.createElement('textarea');
-                tempInput.value = text;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                try {
-                    document.execCommand('copy');
-                    const messageElement = document.getElementById('copyMessage');
-                    messageElement.classList.remove('hidden');
-                    messageElement.style.opacity = '0';
-                    setTimeout(() => messageElement.style.opacity = '1', 10);
-                    setTimeout(() => {
-                        messageElement.style.opacity = '0';
-                        setTimeout(() => messageElement.classList.add('hidden'), 300);
-                    }, 2000);
-                } catch (err) {
-                    console.error('No se pudo copiar el texto: ', err);
-                }
-                document.body.removeChild(tempInput);
-            };
-
-            // ** Control del Audio y Animación del Disco **
-            const backgroundMusic = document.getElementById('background-music');
-            const audioToggleButton = document.getElementById('audio-toggle-btn'); // Botón flotante (disco)
-            const audioToggleIcon = audioToggleButton.querySelector('i');
-            const heroPlayButtonWrapper = document.getElementById('hero-play-btn-wrapper'); // Contenedor del botón de inicio
-            const heroPlayButton = document.getElementById('hero-play-btn'); // Botón de play inicial
-
-            let musicNotesInterval = null; // Variable para controlar el intervalo de notas
-
-            // Función para crear y animar las notas musicales
-            function createMusicNotes(originElement) {
-                const rect = originElement.getBoundingClientRect();
-                const startX = rect.left + rect.width / 2;
-                const startY = rect.top + rect.height / 2;
-
-                const notes = ['♪', '♬', '♫']; // Puedes añadir más caracteres o iconos
-
-                for (let i = 0; i < 3; i++) { // Crear 3 notas a la vez
-                    const note = document.createElement('span');
-                    note.textContent = notes[Math.floor(Math.random() * notes.length)];
-                    note.classList.add('music-note');
-
-                    // Posicionar la nota en el centro del botón
-                    note.style.left = `${startX}px`;
-                    note.style.top = `${startY}px`;
-
-                    // Variables CSS personalizadas para animación aleatoria
-                    const randomX1 = (Math.random() - 0.5) * 50; // Pequeño desplazamiento inicial
-                    const randomY1 = (Math.random() - 0.5) * 50;
-                    const randomX2 = (Math.random() - 0.5) * 150; // Desplazamiento final más grande
-                    const randomY2 = (Math.random() * -100) - 50; // Siempre hacia arriba
-
-                    note.style.setProperty('--initial-x', `${randomX1}px`);
-                    note.style.setProperty('--initial-y', `${randomY1}px`);
-                    note.style.setProperty('--final-x', `${randomX2}px`);
-                    note.style.setProperty('--final-y', `${randomY2}px`);
-
-                    document.body.appendChild(note);
-
-                    // Eliminar la nota después de que termine la animación
-                    note.addEventListener('animationend', () => {
-                        note.remove();
-                    });
-                }
-            }
-
-            // Función para iniciar la animación continua de notas
-            function startContinuousNotes() {
-                if (!musicNotesInterval) { // Solo iniciar si no hay un intervalo ya activo
-                    musicNotesInterval = setInterval(() => {
-                        if (!backgroundMusic.muted && !backgroundMusic.paused) {
-                             createMusicNotes(audioToggleButton); // Crear notas desde el botón flotante
-                        } else {
-                            stopContinuousNotes(); // Si la música se muteó o pausó, detener las notas
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target); 
                         }
-                    }, 300); // Generar una nota cada 300ms
+                    });
+                }, observerOptions);
+
+                if (animatedElements.length > 0) {
+                    animatedElements.forEach(element => {
+                        element.classList.add('animate-on-scroll');
+                        observer.observe(element);
+                    });
+                    console.log("Scroll animation setup complete.");
+                } else {
+                    console.warn("No animated elements found for scroll observer.");
                 }
-            }
 
-            // Función para detener la animación continua de notas
-            function stopContinuousNotes() {
-                if (musicNotesInterval) {
-                    clearInterval(musicNotesInterval);
-                    musicNotesInterval = null;
+                // ** Smooth Scroll para la Navegación (para enlaces dentro del menú normal) **
+                const navLinks = document.querySelectorAll('header nav a');
+                if (navLinks.length > 0) {
+                    navLinks.forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('href');
+                            const targetElement = document.querySelector(targetId);
+                            if (targetElement) { 
+                                targetElement.scrollIntoView({
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                console.warn(`Target element not found for navigation link: ${targetId}`);
+                            }
+                        });
+                    });
+                    console.log("Smooth scroll setup complete for header navigation.");
+                } else {
+                    console.warn("No header navigation links found.");
                 }
-            }
 
-            // --- Lógica de Inicialización de Audio: Solo se muestra el botón de play inicial ---
-            // Se asume que el navegador bloqueará el autoplay directo.
-            // El audio siempre comienza muted, y el botón flotante oculto.
-            backgroundMusic.muted = true; // Asegurarse de que el audio esté muteado al inicio
-            heroPlayButtonWrapper.classList.remove('hidden'); // Asegurarse de que el botón de inicio sea visible
-            audioToggleButton.classList.remove('visible'); // Asegurarse de que el botón flotante esté oculto
-            audioToggleIcon.classList.remove('fa-volume-up');
-            audioToggleIcon.classList.add('fa-volume-mute'); // Mostrar el icono de mute en el botón flotante (aunque esté oculto)
-            audioToggleButton.classList.remove('playing'); // Asegurarse de que no gire
-            stopContinuousNotes(); // Asegurarse de que no haya notas
+                // ** Funcionalidad de la Galería de Fotos (Modal Simple) **
+                const galleryImages = document.querySelectorAll('#galeria .group');
+                const modal = document.getElementById('galleryModal');
+                const modalImg = document.getElementById('imgModal');
+                const closeBtn = document.querySelector('.modal-close');
 
-            // --- Lógica del Botón de Play Inicial (heroPlayButton) ---
-            if (heroPlayButton) {
-                heroPlayButton.addEventListener('click', () => {
-                    backgroundMusic.muted = false; // Desactivar el silencio
-                    backgroundMusic.play().then(() => {
-                        // Reproducción iniciada con éxito por el usuario
-                        heroPlayButtonWrapper.classList.add('hidden'); // Ocultar el botón de play inicial
-                        audioToggleButton.classList.add('visible'); // Mostrar el botón flotante
-                        audioToggleIcon.classList.remove('fa-volume-mute');
-                        audioToggleIcon.classList.add('fa-volume-up');
-                        audioToggleButton.classList.add('playing'); // Iniciar giro del disco
-                        startContinuousNotes(); // Iniciar animación continua de notas
-                    }).catch(error => {
-                        // Si por alguna razón la reproducción falla incluso con un clic (ej. error en el archivo de audio)
-                        console.log("Error al reproducir el audio con el botón de inicio después de interacción del usuario:", error);
-                        // Mostrar un mensaje al usuario o revertir el estado del botón si es necesario.
-                        // Por ahora, solo se logea el error.
-                        // Mantener el botón de play inicial visible para un nuevo intento.
-                        heroPlayButtonWrapper.classList.remove('hidden');
-                        audioToggleButton.classList.remove('visible');
+                if (modal && modalImg && closeBtn) { 
+                    if (galleryImages.length > 0) {
+                        galleryImages.forEach(imageWrapper => {
+                            imageWrapper.addEventListener('click', function() {
+                                modal.style.display = 'flex';
+                                // Pequeño retraso para asegurar que la propiedad display se aplique antes de la transición de opacidad
+                                setTimeout(() => modal.style.opacity = '1', 10);
+                                modalImg.src = this.getAttribute('data-src');
+                            });
+                        });
+                    } else {
+                        console.warn("No gallery images found.");
+                    }
+
+                    closeBtn.addEventListener('click', function() {
+                        modal.style.opacity = '0';
+                        setTimeout(() => modal.style.display = 'none', 300);
+                    });
+
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            modal.style.opacity = '0';
+                            setTimeout(() => modal.style.display = 'none', 300);
+                        }
+                    });
+                    console.log("Gallery modal setup complete.");
+                } else {
+                    console.warn("One or more gallery modal elements not found.");
+                }
+
+                // ** Funcionalidad de Copiar al Portapapeles **
+                window.copyToClipboard = function(text) {
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = text;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    try {
+                        document.execCommand('copy');
+                        const messageElement = document.getElementById('copyMessage');
+                        if (messageElement) { 
+                            messageElement.classList.remove('hidden');
+                            messageElement.style.opacity = '0';
+                            setTimeout(() => messageElement.style.opacity = '1', 10);
+                            setTimeout(() => {
+                                messageElement.style.opacity = '0';
+                                setTimeout(() => messageElement.classList.add('hidden'), 300);
+                            }, 2000);
+                        } else {
+                            console.warn("Copy message element (ID 'copyMessage') not found.");
+                        }
+                    } catch (err) {
+                        console.error('No se pudo copiar el texto al portapapeles: ', err);
+                    }
+                    document.body.removeChild(tempInput);
+                };
+                console.log("Copy to clipboard function defined (global scope).");
+
+
+                // ** Control del Audio y Animación del Disco **
+                const backgroundMusic = document.getElementById('background-music');
+                const audioToggleButton = document.getElementById('audio-toggle-btn');
+                const audioToggleIcon = audioToggleButton ? audioToggleButton.querySelector('i') : null; 
+                const heroPlayButtonWrapper = document.getElementById('hero-play-btn-wrapper');
+                const heroPlayButton = document.getElementById('hero-play-btn');
+
+                let musicNotesInterval = null;
+
+                function createMusicNotes(originElement) {
+                    if (!originElement) return; // Asegurar que el elemento exista
+                    const rect = originElement.getBoundingClientRect();
+                    const startX = rect.left + rect.width / 2;
+                    const startY = rect.top + rect.height / 2;
+
+                    const notes = ['♪', '♬', '♫'];
+
+                    for (let i = 0; i < 3; i++) {
+                        const note = document.createElement('span');
+                        note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                        note.classList.add('music-note');
+
+                        note.style.left = `${startX}px`;
+                        note.style.top = `${startY}px`;
+
+                        const randomX1 = (Math.random() - 0.5) * 50;
+                        const randomY1 = (Math.random() - 0.5) * 50;
+                        const randomX2 = (Math.random() - 0.5) * 150;
+                        const randomY2 = (Math.random() * -100) - 50;
+
+                        note.style.setProperty('--initial-x', `${randomX1}px`);
+                        note.style.setProperty('--initial-y', `${randomY1}px`);
+                        note.style.setProperty('--final-x', `${randomX2}px`);
+                        note.style.setProperty('--final-y', `${randomY2}px`);
+
+                        document.body.appendChild(note);
+
+                        note.addEventListener('animationend', () => {
+                            note.remove();
+                        });
+                    }
+                }
+
+                function startContinuousNotes() {
+                    if (!musicNotesInterval) {
+                        musicNotesInterval = setInterval(() => {
+                            if (backgroundMusic && !backgroundMusic.muted && !backgroundMusic.paused && audioToggleButton) {
+                                 createMusicNotes(audioToggleButton);
+                            } else {
+                                stopContinuousNotes();
+                            }
+                        }, 300);
+                    }
+                }
+
+                function stopContinuousNotes() {
+                    if (musicNotesInterval) {
+                        clearInterval(musicNotesInterval);
+                        musicNotesInterval = null;
+                    }
+                }
+
+                if (backgroundMusic) backgroundMusic.muted = true;
+                if (heroPlayButtonWrapper) heroPlayButtonWrapper.classList.remove('hidden');
+                if (audioToggleButton) {
+                    audioToggleButton.classList.remove('visible');
+                    if (audioToggleIcon) {
                         audioToggleIcon.classList.remove('fa-volume-up');
                         audioToggleIcon.classList.add('fa-volume-mute');
-                        backgroundMusic.muted = true;
-                        audioToggleButton.classList.remove('playing');
-                        stopContinuousNotes();
-                    });
-                });
-            }
-
-            // --- Lógica del Botón Flotante (audioToggleButton) ---
-            audioToggleButton.addEventListener('click', () => {
-                backgroundMusic.muted = !backgroundMusic.muted; // Alternar mute/unmute
-                
-                if (backgroundMusic.muted) {
-                    audioToggleIcon.classList.remove('fa-volume-up');
-                    audioToggleIcon.classList.add('fa-volume-mute');
-                    stopContinuousNotes(); // Detener notas si se mutea
-                } else {
-                    audioToggleIcon.classList.remove('fa-volume-mute');
-                    audioToggleIcon.classList.add('fa-volume-up');
-                    // Intentar reproducir si estaba pausada, para asegurar que suene al desmutear
-                    backgroundMusic.play().catch(error => console.log("Error al reproducir audio desde el botón de volumen:", error));
-                    startContinuousNotes(); // Iniciar notas si se desmutea
-                }
-            });
-
-            // --- Sincronizar el estado visual del disco con el audio real ---
-            backgroundMusic.addEventListener('play', () => {
-                audioToggleButton.classList.add('playing'); // El disco gira siempre que la música esté reproduciéndose
-                if (!backgroundMusic.muted) {
-                    audioToggleIcon.classList.remove('fa-volume-mute');
-                    audioToggleIcon.classList.add('fa-volume-up');
-                    startContinuousNotes(); // Iniciar notas si se reproduce y no está muteada
-                }
-            });
-
-            backgroundMusic.addEventListener('pause', () => {
-                audioToggleButton.classList.remove('playing'); // Detener giro del disco
-                stopContinuousNotes(); // Detener notas si se pausa
-            });
-
-            backgroundMusic.addEventListener('volumechange', () => {
-                // Este evento se dispara cuando cambia el estado de muted
-                if (backgroundMusic.muted) {
-                    audioToggleIcon.classList.remove('fa-volume-up');
-                    audioToggleIcon.classList.add('fa-volume-mute');
-                    stopContinuousNotes(); // Detener notas si se mutea
-                } else {
-                    if (!backgroundMusic.paused) { // Si no está muteada y NO está pausada, entonces está sonando
-                        audioToggleIcon.classList.remove('fa-volume-mute');
-                        audioToggleIcon.classList.add('fa-volume-up');
-                        startContinuousNotes(); // Iniciar notas si se desmutea y está sonando
-                    } else {
-                        // Si se desmutea pero está pausada, no debe haber notas
-                        stopContinuousNotes();
                     }
+                    audioToggleButton.classList.remove('playing');
                 }
-            });
+                stopContinuousNotes();
 
-            // --- Funcionalidad del Menú Hamburguesa ---
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
-            const closeMenuBtn = mobileMenu.querySelector('.close-btn');
-            const mobileNavLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
-
-            function openMenu() {
-                mobileMenu.classList.add('open');
-                mobileMenuOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Evitar scroll del body
-            }
-
-            function closeMenu() {
-                mobileMenu.classList.remove('open');
-                mobileMenuOverlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restaurar scroll del body
-            }
-
-            hamburgerBtn.addEventListener('click', openMenu);
-            closeMenuBtn.addEventListener('click', closeMenu);
-            mobileMenuOverlay.addEventListener('click', closeMenu); // Cerrar al hacer clic fuera
-
-            // Cerrar menú al hacer clic en un enlace de navegación móvil
-            mobileNavLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault(); // Prevenir el salto instantáneo
-                    const targetId = link.getAttribute('href');
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
+                if (heroPlayButton && backgroundMusic) {
+                    heroPlayButton.addEventListener('click', () => {
+                        backgroundMusic.muted = false;
+                        backgroundMusic.play().then(() => {
+                            if (heroPlayButtonWrapper) heroPlayButtonWrapper.classList.add('hidden');
+                            if (audioToggleButton) {
+                                audioToggleButton.classList.add('visible');
+                                if (audioToggleIcon) {
+                                    audioToggleIcon.classList.remove('fa-volume-mute');
+                                    audioToggleIcon.classList.add('fa-volume-up');
+                                }
+                                audioToggleButton.classList.add('playing');
+                            }
+                            startContinuousNotes();
+                        }).catch(error => {
+                            console.log("Error al reproducir el audio con el botón de inicio después de interacción del usuario:", error);
+                            if (heroPlayButtonWrapper) heroPlayButtonWrapper.classList.remove('hidden');
+                            if (audioToggleButton) {
+                                audioToggleButton.classList.remove('visible');
+                                if (audioToggleIcon) {
+                                    audioToggleIcon.classList.remove('fa-volume-up');
+                                    audioToggleIcon.classList.add('fa-volume-mute');
+                                }
+                                backgroundMusic.muted = true;
+                                audioToggleButton.classList.remove('playing');
+                            }
+                            stopContinuousNotes();
+                        });
                     });
-                    closeMenu(); // Cerrar el menú después de navegar
-                });
-            });
-
-            // --- Funcionalidad del Modal de Dress Code ---
-            const femaleDressCodeBtn = document.getElementById('female-dress-code');
-            const dressCodeModal = document.getElementById('dressCodeModal');
-            const closeDressCodeModalBtn = document.getElementById('closeDressCodeModal');
-
-            if (femaleDressCodeBtn) {
-                femaleDressCodeBtn.addEventListener('click', () => {
-                    dressCodeModal.style.display = 'flex';
-                    setTimeout(() => dressCodeModal.style.opacity = '1', 10);
-                });
-            }
-
-            if (closeDressCodeModalBtn) {
-                closeDressCodeModalBtn.addEventListener('click', () => {
-                    dressCodeModal.style.opacity = '0';
-                    setTimeout(() => dressCodeModal.style.display = 'none', 300);
-                });
-            }
-
-            dressCodeModal.addEventListener('click', (e) => {
-                if (e.target === dressCodeModal) {
-                    dressCodeModal.style.opacity = '0';
-                    setTimeout(() => dressCodeModal.style.display = 'none', 300);
+                } else {
+                    console.warn("Hero play button or background music element not found. Music playback might not be initiated.");
                 }
-            });
+
+                if (audioToggleButton && backgroundMusic) {
+                    audioToggleButton.addEventListener('click', () => {
+                        backgroundMusic.muted = !backgroundMusic.muted;
+                        
+                        if (backgroundMusic.muted) {
+                            if (audioToggleIcon) {
+                                audioToggleIcon.classList.remove('fa-volume-up');
+                                audioToggleIcon.classList.add('fa-volume-mute');
+                            }
+                            stopContinuousNotes();
+                        } else {
+                            if (audioToggleIcon) {
+                                audioToggleIcon.classList.remove('fa-volume-mute');
+                                audioToggleIcon.classList.add('fa-volume-up');
+                            }
+                            backgroundMusic.play().catch(error => console.log("Error al reproducir audio desde el botón de volumen:", error));
+                            startContinuousNotes();
+                        }
+                    });
+                } else {
+                    console.warn("Audio toggle button or background music element not found. Mute functionality might be affected.");
+                }
+
+                if (backgroundMusic) {
+                    backgroundMusic.addEventListener('play', () => {
+                        if (audioToggleButton) audioToggleButton.classList.add('playing');
+                        if (!backgroundMusic.muted) {
+                            if (audioToggleIcon) {
+                                audioToggleIcon.classList.remove('fa-volume-mute');
+                                audioToggleIcon.classList.add('fa-volume-up');
+                            }
+                            startContinuousNotes();
+                        }
+                    });
+
+                    backgroundMusic.addEventListener('pause', () => {
+                        if (audioToggleButton) audioToggleButton.classList.remove('playing');
+                        stopContinuousNotes();
+                    });
+
+                    backgroundMusic.addEventListener('volumechange', () => {
+                        if (backgroundMusic.muted) {
+                            if (audioToggleIcon) {
+                                audioToggleIcon.classList.remove('fa-volume-up');
+                                audioToggleIcon.classList.add('fa-volume-mute');
+                            }
+                            stopContinuousNotes();
+                        } else {
+                            if (!backgroundMusic.paused) {
+                                if (audioToggleIcon) {
+                                    audioToggleIcon.classList.remove('fa-volume-mute');
+                                    audioToggleIcon.classList.add('fa-volume-up');
+                                }
+                                startContinuousNotes();
+                            } else {
+                                stopContinuousNotes();
+                            }
+                        }
+                    });
+                }
+                console.log("Music control setup complete.");
+
+
+                // ** Funcionalidad del Menú Hamburguesa **
+                const hamburgerBtn = document.getElementById('hamburger-btn');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+                const closeMenuBtn = mobileMenu ? mobileMenu.querySelector('.close-btn') : null; 
+                const mobileNavLinks = mobileMenu ? mobileMenu.querySelectorAll('.mobile-nav-link') : []; 
+
+                if (hamburgerBtn && mobileMenu && mobileMenuOverlay && closeMenuBtn) { 
+                    function openMenu() {
+                        mobileMenu.classList.add('open');
+                        mobileMenuOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden'; 
+                    }
+
+                    function closeMenu() {
+                        mobileMenu.classList.remove('open');
+                        mobileMenuOverlay.classList.remove('active');
+                        document.body.style.overflow = ''; 
+                    }
+
+                    hamburgerBtn.addEventListener('click', openMenu);
+                    closeMenuBtn.addEventListener('click', closeMenu);
+                    mobileMenuOverlay.addEventListener('click', closeMenu); 
+
+                    if (mobileNavLinks.length > 0) {
+                        mobileNavLinks.forEach(link => {
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault(); 
+                                const targetId = link.getAttribute('href');
+                                const targetElement = document.querySelector(targetId);
+                                if (targetElement) { 
+                                    targetElement.scrollIntoView({
+                                        behavior: 'smooth'
+                                    });
+                                } else {
+                                    console.warn(`Target element not found for mobile nav link: ${targetId}`);
+                                }
+                                closeMenu(); 
+                            });
+                        });
+                        console.log("Mobile navigation links setup complete.");
+                    } else {
+                        console.warn("No mobile navigation links found.");
+                    }
+                    console.log("Hamburger menu setup complete.");
+                } else {
+                    console.warn("One or more hamburger menu elements not found. Mobile menu might not be fully functional.");
+                }
+
+                // ** Funcionalidad del Modal de Dress Code **
+                const femaleDressCodeBtn = document.getElementById('female-dress-code');
+                const dressCodeModal = document.getElementById('dressCodeModal');
+                const closeDressCodeModalBtn = document.getElementById('closeDressCodeModal');
+
+                if (femaleDressCodeBtn && dressCodeModal && closeDressCodeModalBtn) { 
+                    femaleDressCodeBtn.addEventListener('click', () => {
+                        dressCodeModal.style.display = 'flex';
+                        setTimeout(() => dressCodeModal.style.opacity = '1', 10);
+                    });
+
+                    closeDressCodeModalBtn.addEventListener('click', () => {
+                        dressCodeModal.style.opacity = '0';
+                        setTimeout(() => dressCodeModal.style.display = 'none', 300);
+                    });
+
+                    dressCodeModal.addEventListener('click', (e) => {
+                        if (e.target === dressCodeModal) {
+                            dressCodeModal.style.opacity = '0';
+                            setTimeout(() => dressCodeModal.style.display = 'none', 300);
+                        }
+                    });
+                    console.log("Dress Code modal setup complete.");
+                } else {
+                    console.warn("One or more Dress Code modal elements not found. Dress Code modal might not be fully functional.");
+                }
+
+            } catch (error) {
+                console.error("An error occurred during DOMContentLoaded execution:", error);
+            }
+            console.log("All interactive elements initialization attempted.");
         }); // End of DOMContentLoaded
     </script>
 </body>
