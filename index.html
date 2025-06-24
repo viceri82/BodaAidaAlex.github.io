@@ -395,7 +395,7 @@
             }
 
             /* Positioning for dots within right column (3rd, 7th event) */
-            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 3) .itinerary-dot {
+            #itinerario .grid-cols-2 > div.relative:nth-child(4n + 3) .itinerario-dot {
                 left: -24px; /* Position to the left of the card, next to the central line */
                 right: auto; /* Reset right */
                 top: 50%; /* Vertically center */
@@ -440,7 +440,7 @@
 <body class="antialiased">
 
     <!-- Audio de fondo -->
-    <audio id="background-music" autoplay loop muted>
+    <audio id="background-music" loop muted>
         <source src="https://cdn.pixabay.com/download/audio/2024/04/16/audio_749a1d6c0e.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
@@ -508,7 +508,7 @@
     <section id="hero" class="relative h-screen flex items-center justify-center text-center parallax-bg" 
         style="background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
         <div class="absolute inset-0 bg-black opacity-30"></div> <!-- Capa oscura para contraste -->
-        <div class="relative z-10 text-white p-6 md:p-12 bg-black bg-opacity-40 rounded-xl shadow-lg transform transition-transform duration-1000 ease-out scale-95 hover:scale-100">
+        <div class="relative z-10 text-white p-6 md:p-12 bg-black bg-opacity-40 rounded-xl shadow-lg transition-transform duration-1000 ease-out hover:scale-105">
             <h1 class="text-4xl md:text-7xl font-bold mb-4 tracking-wider">¡Nos Casamos!</h1>
             <p class="text-3xl md:text-5xl font-light mb-6">Aida & Alejandro</p>
             <p class="text-xl md:text-3xl mb-8">13 de Diciembre de 2025</p>
@@ -1046,9 +1046,9 @@
             }
         }, 1000);
 
-        // ** Funcionalidad de Animación al Hacer Scroll (Intersection Observer) **
-        document.addEventListener('DOMContentLoaded', () => {
-            // Seleccionar todos los elementos que deben animarse al hacer scroll
+        // Envuelve la lógica principal en DOMContentLoaded para asegurar que el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // ** Funcionalidad de Animación al Hacer Scroll (Intersection Observer) **
             const animatedElements = document.querySelectorAll(
                 '#nuestra-historia .animate-on-scroll, ' +
                 '#galeria .animate-on-scroll, ' +
@@ -1209,30 +1209,42 @@
                 }
             }
 
+            // --- Lógica de Inicialización de Audio: Solo se muestra el botón de play inicial ---
+            // Se asume que el navegador bloqueará el autoplay directo.
+            // El audio siempre comienza muted, y el botón flotante oculto.
+            backgroundMusic.muted = true; // Asegurarse de que el audio esté muteado al inicio
+            heroPlayButtonWrapper.classList.remove('hidden'); // Asegurarse de que el botón de inicio sea visible
+            audioToggleButton.classList.remove('visible'); // Asegurarse de que el botón flotante esté oculto
+            audioToggleIcon.classList.remove('fa-volume-up');
+            audioToggleIcon.classList.add('fa-volume-mute'); // Mostrar el icono de mute en el botón flotante (aunque esté oculto)
+            audioToggleButton.classList.remove('playing'); // Asegurarse de que no gire
+            stopContinuousNotes(); // Asegurarse de que no haya notas
+
             // --- Lógica del Botón de Play Inicial (heroPlayButton) ---
             if (heroPlayButton) {
                 heroPlayButton.addEventListener('click', () => {
                     backgroundMusic.muted = false; // Desactivar el silencio
                     backgroundMusic.play().then(() => {
-                        // Ocultar el botón de inicio
-                        heroPlayButtonWrapper.classList.add('hidden'); 
-                        // Mostrar el botón de audio flotante
-                        audioToggleButton.classList.add('visible'); // Usa la nueva clase 'visible'
-                        // Generar notas una vez desde el botón de inicio al hacer clic
-                        createMusicNotes(heroPlayButton);
-
-                        // Actualizar el estado del botón flotante
+                        // Reproducción iniciada con éxito por el usuario
+                        heroPlayButtonWrapper.classList.add('hidden'); // Ocultar el botón de play inicial
+                        audioToggleButton.classList.add('visible'); // Mostrar el botón flotante
                         audioToggleIcon.classList.remove('fa-volume-mute');
                         audioToggleIcon.classList.add('fa-volume-up');
                         audioToggleButton.classList.add('playing'); // Iniciar giro del disco
                         startContinuousNotes(); // Iniciar animación continua de notas
                     }).catch(error => {
-                        console.log("Error al reproducir el audio con el botón de inicio:", error);
-                        // Si falla la reproducción, asegurar estado correcto del botón flotante
+                        // Si por alguna razón la reproducción falla incluso con un clic (ej. error en el archivo de audio)
+                        console.log("Error al reproducir el audio con el botón de inicio después de interacción del usuario:", error);
+                        // Mostrar un mensaje al usuario o revertir el estado del botón si es necesario.
+                        // Por ahora, solo se logea el error.
+                        // Mantener el botón de play inicial visible para un nuevo intento.
+                        heroPlayButtonWrapper.classList.remove('hidden');
+                        audioToggleButton.classList.remove('visible');
                         audioToggleIcon.classList.remove('fa-volume-up');
                         audioToggleIcon.classList.add('fa-volume-mute');
-                        audioToggleButton.classList.remove('playing'); // Detener giro
-                        stopContinuousNotes(); // Detener notas
+                        backgroundMusic.muted = true;
+                        audioToggleButton.classList.remove('playing');
+                        stopContinuousNotes();
                     });
                 });
             }
@@ -1286,27 +1298,6 @@
                     }
                 }
             });
-
-            // Establecer el estado inicial de los botones y animaciones al cargar la página
-            // El botón flotante de audio estará oculto por defecto por el CSS "opacity: 0; pointer-events: none;"
-            // El botón de play inicial sí estará visible
-            if (!backgroundMusic.paused && !backgroundMusic.muted) {
-                 // Caso: El audio se está reproduciendo y NO está silenciado (rara vez en carga inicial sin interacción).
-                audioToggleButton.classList.add('visible'); // Mostrar el botón flotante si ya está sonando
-                heroPlayButtonWrapper.classList.add('hidden'); // Ocultar botón de inicio
-                audioToggleIcon.classList.remove('fa-volume-mute');
-                audioToggleIcon.classList.add('fa-volume-up');
-                audioToggleButton.classList.add('playing'); // Gira
-                startContinuousNotes(); // Iniciar notas
-            } else {
-                // Por defecto, o si el autoplay falla/está muteado, mostrar el botón de play inicial
-                heroPlayButtonWrapper.classList.remove('hidden');
-                audioToggleButton.classList.remove('visible'); // Asegurarse de que esté oculto
-                audioToggleIcon.classList.remove('fa-volume-up');
-                audioToggleIcon.classList.add('fa-volume-mute'); // Mostrarlo como muteado por defecto
-                audioToggleButton.classList.remove('playing'); // No gira
-                stopContinuousNotes();
-            }
 
             // --- Funcionalidad del Menú Hamburguesa ---
             const hamburgerBtn = document.getElementById('hamburger-btn');
@@ -1368,7 +1359,7 @@
                     setTimeout(() => dressCodeModal.style.display = 'none', 300);
                 }
             });
-        });
+        }); // End of DOMContentLoaded
     </script>
 </body>
 </html>
