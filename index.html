@@ -1386,7 +1386,6 @@
 
             function openMobileMenu() {
                 mainNav.classList.add('menu-open');
-                mobileMenuOverlay.classList.add('overlay-active');
                 menuToggleIcon.classList.remove('fa-bars');
                 menuToggleIcon.classList.add('fa-times'); // Cambia a icono de 'X'
                 document.body.style.overflow = 'hidden'; // Evita el scroll en el body
@@ -1394,7 +1393,6 @@
 
             function closeMobileMenu() {
                 mainNav.classList.remove('menu-open');
-                mobileMenuOverlay.classList.remove('overlay-active');
                 menuToggleIcon.classList.remove('fa-times');
                 menuToggleIcon.classList.add('fa-bars'); // Vuelve al icono de hamburguesa
                 document.body.style.overflow = ''; // Restaura el scroll en el body
